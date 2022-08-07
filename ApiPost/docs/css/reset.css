@@ -1,0 +1,59 @@
+/*reset*/
+html,body,h1,h2,h3,h4,h5,h6,p,div,ul,li,ol,dl,dt,dd,table,tr,td,input{
+    margin: 0px;
+    padding: 0px;
+}
+
+html,body{
+    height: 100%;
+    /*让元素在写高度等100%，可以生效，还要就是body的背景图可以居中*/
+}
+
+body{
+    font-size: 14px;
+    font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
+    color: #333;
+    -webkit-font-smoothing: antialiased;
+}
+
+code{font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;}
+h1,h2,h3,h4,h5,h6{
+    font-size: 16px;
+    font-weight: normal;
+}
+
+img{
+    display: block;
+}
+
+/*解决img下面的间隔的问题*/
+
+a{
+    text-decoration: none;
+    color: #333;
+}
+
+ul,li{
+    list-style: none;
+}
+
+.clearfix:after{
+    content: " ";
+    display: block;
+    height: 0px;
+    visibility: hidden;
+    clear:both;
+}
+
+.w1200{
+    width: 1200px;
+    margin: 0px auto;
+}
+
+.fl{
+    float: left;
+}
+
+.fr{
+    float: right;
+}

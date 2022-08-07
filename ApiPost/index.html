@@ -1,0 +1,1670 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="version" content="For Json viewer">
+    <title>ApiPost接口文档</title>
+    <link href="./v6/docs/img/doc_favicon.ico" rel="shortcut icon" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" href="./docs/css/reset.css">
+    <link rel="stylesheet" type="text/css" href="./docs/css/font-awesome-4.7.0/css/font-awesome.css">
+    <link rel="stylesheet" href="./docs/css/github.css">
+    <script type="text/javascript"></script>
+    <script type="text/javascript" src="./docs/js/jquery-3.4.1.min.js"></script>
+    <script src="./docs/js/colResizable-1.6.min.js"></script>
+    <script type="text/javascript" src="./docs/js/marked.min.js"></script>
+    <script type="text/javascript" src="./docs/js/template-web.js"></script>
+    <script type="text/javascript" src="./docs/js/highlight.js"></script>
+    <script type="text/javascript" src="./docs/js/clipboard.min.js"></script>
+    <script type="text/javascript" src="./statics/libs/crypto-js/crypto-js.min.js" charset="utf-8"></script>
+    <script type="text/javascript" src="./docs/js/json5.min.js"></script>
+    <script type="text/javascript" src="./docs/js/enc.min.js"></script>
+    <script type="text/javascript" src="./docs/json-viewer/json-viewer.min.js"></script>
+    <script src="./docs/js/indent.js"></script>
+
+    <script>
+        Date.prototype.format = function (fmt) {
+            var o = {
+                "M+": this.getMonth() + 1,                 //月份
+                "d+": this.getDate(),                    //日
+                "h+": this.getHours(),                   //小时
+                "m+": this.getMinutes(),                 //分
+                "s+": this.getSeconds(),                 //秒
+                "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+                "S": this.getMilliseconds()             //毫秒
+            };
+            if (/(y+)/.test(fmt)) {
+                fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+            }
+            for (var k in o) {
+                if (new RegExp("(" + k + ")").test(fmt)) {
+                    fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+                }
+            }
+            return fmt;
+        }
+    </script>
+    <style type="text/css">
+        .preview-markdown table td {
+            position: relative;
+        }
+
+        .indent-fold {
+            border: 0;
+            background: transparent;
+            position: absolute;
+            left: -25px;
+            top: 10px;
+            font-size: 24px;
+            color: #999;
+            cursor: pointer;
+            text-align: center;
+            width: 15px;
+            height: 15px;
+            padding: 0;
+        }
+
+        .indent-fold img {
+            position: static !important;
+            transform: translateY(0);
+        }
+
+        .indent-fold.right img {
+            transform: rotate(0);
+        }
+
+        .indent-fold.down img {
+            transform: rotate(-90deg);
+        }
+    </style>
+
+    <link rel="stylesheet" href="./docs/css/docs.css">
+    <link rel="stylesheet" href="./docs/css/v6.css">
+    <link rel="stylesheet" href="./docs/css/jsonview.css">
+    <style>
+       .body .box{
+            height: calc(100vh - 60px);
+        }
+
+        .JCLRgrip .JColResizer {
+            cursor: col-resize;
+        }
+
+        table tr td,
+        th {
+            text-indent: 8px;
+        }
+
+        .JColResizer>tbody>tr>td,
+        .JColResizer>tbody>tr>th {
+            overflow: visible !important;
+        }
+    </style>
+</head>
+
+<body>
+<!-- <body> -->
+<div class="body">
+    <div class="doc-head">
+        <div class="left">
+            <a href="https://www.apipost.cn/" target="_blank" title="ApiPost接口与文档管理系统">
+                <img src="./v6/docs/img/logov6.svg" alt="ApiPost接口与文档管理系统">
+            </a>
+        </div>
+        <div class="container">
+
+        </div>
+    </div>
+    <div class="box">
+        <div class="box-first" style="display: flex; flex-direction: column;justify-content: flex-end;">
+            <div class="sreachInput">
+                <img src="./v6/docs/img/search.svg" alt="">
+                <input type="text" class="search" placeholder="搜索目录/接口">
+            </div>
+            <div class="title">
+
+            </div>
+            <div class="target top" data-target_id="001">
+                <div class="globals_select"></div>
+                全局参数
+            </div>
+            <div class="new">
+
+            </div>
+            <!-- <a href="https://www.toutiao.com/i6960487351701275149/" id = "advertise" target="_blank" style="display: inline-block; width: 300px;height: 70px;background: url('https://img.cdn.apipost.cn/cdn/images/a-long-letter.svg?0424') no-repeat left"></a> -->
+            <div class="bar"></div>
+            <script type="text/html" id="template-target-sidebar-list-tpl">
+                {{each list value}}
+                <div>
+                    <div class="target {{value.target_type == 'folder' ? 'folder':'api'}}"
+                         data-type="{{value.target_type}}"
+                         data-target_id="{{value.local_target_id}}">
+                        {{if value.target_type == 'folder'}}
+                        <span>
+                       <span class="control">
+                           {{if value.children}}
+                           <div class="folder_select">
+
+                           </div>
+                           {{/if}}
+                        </span>
+                       <span>
+                         <div class="img">
+
+                         </div>
+                         {{value.name}}
+                        </span>
+                       </span>
+                        {{else}}
+                        <span>
+                         <em class="{{((value.target_type == 'doc') || (value.target_type == 'example' && value.is_doc == 1)) ? 'DOC' : value.target_type != 'example' ? value.method : value.method}}">{{(value.target_type == 'doc' || (value.target_type == 'example' && value.is_doc == '1')) ? '文本' :  value.method == 'OPTIONS' ? 'OPT' : value.method == 'DELETE' ? 'DEL' : value.method == 'UNLINK' ? 'UNLNK' : value.method == 'UNLOCK' ? 'UNLCK' : value.method == 'PROPFIND' ? 'PROP' : value.method}}</em>
+                       <span>{{value.name}}</span>
+                       </span>
+                        <span></span>
+                        {{/if}}
+                    </div>
+                    {{if value.children!=null}}
+                    {{each value.children data}}
+                    {{set a=data["index"]=3}}
+                    {{include 'list1' data}}
+                    {{/each}}
+                    {{/if}}
+                </div>
+                {{/each}}
+            </script>
+            <script type="text/html" id="list1">
+                <div>
+                    <div class="target {{target_type == 'folder' ? 'folder':'api'}}" data-type="{{target_type}}"
+                         data-target_id="{{local_target_id}}"
+                         style="padding-left:{{index * 15}}px">
+                        {{if target_type == 'folder'}}
+                        <span>
+                           <span class="control">
+                              {{if children}}
+                              <div class="folder_select">
+
+                              </div>
+                              {{/if}}
+                            </span>
+                        <span>
+                           <div class="img">
+
+                         </div>
+                          {{name}}
+                        </span>
+                       </span>
+                        {{else}}
+                        <span>
+                          <em class="{{((target_type == 'doc') || (target_type == 'example' && is_doc == 1)) ? 'DOC' : target_type != 'example' ? method : method}}">{{(target_type == 'doc' || (target_type == 'example' && is_doc == '1')) ? '文本' :  method == 'OPTIONS' ? 'OPT' : method == 'DELETE' ? 'DEL' : method == 'UNLINK' ? 'UNLNK' : method == 'UNLOCK' ? 'UNLCK' : method == 'PROPFIND' ? 'PROP' : method}}</em>
+                          <span>{{name}}</span>
+                          </span>
+                        <span></span>
+                        {{/if}}
+                    </div>
+                    {{if children!=null}}
+                    {{each children data}}
+                    {{if index}}
+                    {{set b=data.index=index+1}}
+                    {{else}}
+                    {{set c=data["index"] = 3}}
+                    {{/if}}
+                    {{include 'list1' data}}
+                    {{/each}}
+                    {{/if}}
+                </div>
+            </script>
+        </div>
+        <div class="box-third">
+            <div class=" preview-markdown">
+
+            </div>
+            <div style="width: 100%;">
+
+            </div>
+            <div class="box-nav" style="background: #fff;">
+                <ul class="api template-nav-menu">
+                    <script type="text/html" id="template-nav-menu-tpl">
+                        <!--                            {{if target_type == "api" || target_type == "folder" || (target_type == "example" && is_doc == 0) }}-->
+                        {{if request.description}}
+                        <li class="cur nav-btn" data-id="0" style="display: block"><a href="javascript:;">
+                                <img src="./v6/docs/img/arrow.svg" alt="">
+                                接口说明</a></li>
+                        <li class="nav-btn" data-id="1"><a href="javascript:;">
+                                <img src="./v6/docs/img/arrow.svg" alt="">
+                                基本信息</a></li>
+                        {{else}}
+                        <li class="nav-btn" data-id="0" style="display: none"><a href="javascript:;">
+                                <img src="./v6/docs/img/arrow.svg" alt="">
+                                接口说明</a></li>
+                        <li class="cur nav-btn" data-id="1"><a href="javascript:;">
+                                <img src="./v6/docs/img/arrow.svg" alt="">
+                                基本信息</a></li>
+                        {{/if}}
+                        <!--                            {{/if}}-->
+                        {{if request.header.parameter.length > 0 || request.query.parameter.length > 0 ||
+                        request.resful.parameter.length > 0 || request.body.parameter.length>0 || request.body.raw !=''}}
+                        <li class="nav-btn" data-id="2" style="display: block"><a href="javascript:;">
+                                <img src="./v6/docs/img/arrow.svg" alt="">
+                                请求参数</a></li>
+                        {{else}}
+                        <li class="nav-btn" data-id="2" style="display: none"><a href="javascript:;">
+                                <img src="./v6/docs/img/arrow.svg" alt="">
+                                请求参数</a></li>
+                        {{/if}}
+                        <ul>
+                            {{if request.header.parameter.length > 0}}
+                            <li class="nav-btn" data-id="3" style="display: block"><a href="javascript:;">
+                                    <img src="./v6/docs/img/arrow.svg" alt="">
+                                    header参数及说明</a></li>
+                            {{else}}
+                            <li class="nav-btn" data-id="3" style="display: none"><a href="javascript:;">
+                                    <img src="./v6/docs/img/arrow.svg" alt="">
+                                    header参数及说明</a></li>
+                            {{/if}}
+                            {{if request.query.parameter.length > 0}}
+                            <li class="nav-btn" data-id="4" style="display: block"><a href="javascript:;">
+                                    <img src="./v6/docs/img/arrow.svg" alt="">
+                                    query参数及说明</a></li>
+                            {{else}}
+                            <li class="nav-btn" data-id="4" style="display: none"><a href="javascript:;">
+                                    <img src="./v6/docs/img/arrow.svg" alt="">
+                                    query参数及说明</a></li>
+                            {{/if}}
+                            {{if request.resful.parameter.length > 0}}
+                            <li class="nav-btn" data-id="5" style="display: block"><a href="javascript:;">
+                                    <img src="./v6/docs/img/arrow.svg" alt="">
+                                    路径参数及说明</a></li>
+                            {{else}}
+                            <li class="nav-btn" data-id="5" style="display: none"><a href="javascript:;">
+                                    <img src="./v6/docs/img/arrow.svg" alt="">
+                                    路径参数及说明</a></li>
+                            {{/if}}
+
+                            {{if request?.auth?.type && request?.auth?.type != 'noauth'}}
+                            <li class="nav-btn" data-id="6" style="display: block"><a href="javascript:;">
+                                    <img src="./v6/docs/img/arrow.svg" alt="">
+                                    认证及说明</a></li>
+                            {{else}}
+                            <li class="nav-btn" data-id="6" style="display: none"><a href="javascript:;">
+                                    <img src="./v6/docs/img/arrow.svg" alt="">
+                                    认证及说明</a></li>
+                            {{/if}}
+                            {{if request.body.parameter.length>0 || request.body.raw !='' }}
+                            <li class="nav-btn" data-id="7" style="display: block"><a href="javascript:;">
+                                    <img src="./v6/docs/img/arrow.svg" alt="">
+                                    body参数及说明</a></li>
+                            {{else}}
+                            <li class="nav-btn" data-id="7" style="display: none"><a href="javascript:;">
+                                    <img src="./v6/docs/img/arrow.svg" alt="">
+                                    body参数及说明</a></li>
+                            {{/if}}
+                            <!--                        <li class="nav-btn" data-id="6"><a href="javascript:;">预执行脚本</a></li>-->
+                            <!--                        <li class="nav-btn" data-id="7"><a href="javascript:;">后执行脚本</a></li>-->
+
+                        </ul>
+                        {{if response.success.raw || response.success.parameter.length > 0 || response.error.raw ||
+                        response.error.parameter.length > 0}}
+                        <li class="nav-btn" data-id="8" style="display: block"><a href="javascript:;">
+                                <img src="./v6/docs/img/arrow.svg" alt="">
+                                响应示例</a></li>
+                        {{else}}
+                        <li class="nav-btn" data-id="8" style="display:none"><a href="javascript:;">
+                                <img src="./v6/docs/img/arrow.svg" alt="">
+                                响应示例</a></li>
+                        <!-- <ul>-->
+                        <!--                            {{if response.success.raw || response.success.parameter.length > 0}}-->
+                        <!--                            <li class="nav-btn" data-id="9"><a href="javascript:;">成功响应示例</a></li>-->
+                        <!--                            {{/if}}-->
+                        <!---->
+                        <!--                            {{if response.error.raw || response.error.parameter.length > 0}}-->
+                        <!--                            <li class="nav-btn" data-id="10"><a href="javascript:;">失败响应示例</a></li>-->
+                        <!--                            {{/if}}-->
+                        <!--                        </ul> -->
+                        {{/if}}
+                    </script>
+                </ul>
+
+                <ul class="folder">
+                    <li class="cur nav-folder-btn" data-id="0"><a href="javascript:;">
+                            <img src="./v6/docs/img/arrow.svg" alt="">
+                            目录说明</a></li>
+                    <li class="nav-folder-btn" data-id="1"><a href="javascript:;">
+                            <img src="./v6/docs/img/arrow.svg" alt="">
+                            公共参数</a></li>
+                    <ul>
+                        <li class="nav-folder-btn" data-id="2"><a href="javascript:;">
+                                <img src="./v6/docs/img/arrow.svg" alt="">
+                                header参数及说明</a></li>
+                        <li class="nav-folder-btn" data-id="3"><a href="javascript:;">
+                                <img src="./v6/docs/img/arrow.svg" alt="">
+                                query参数及说明</a></li>
+                        <li class="nav-folder-btn" data-id="4"><a href="javascript:;">
+                                <img src="./v6/docs/img/arrow.svg" alt="">
+                                body参数及说明</a></li>
+                        <li class="nav-folder-btn" data-id="5"><a href="javascript:;">
+                                <img src="./v6/docs/img/arrow.svg" alt="">
+                                认证及说明</a></li>
+                        <!-- <li class="nav-folder-btn" data-id="4"><a href="javascript:;">预执行脚本</a></li>-->
+                        <!-- <li class="nav-folder-btn" data-id="5"><a href="javascript:;">后执行脚本</a></li>-->
+                    </ul>
+                </ul>
+
+            </div>
+            <script type="text/html" id="template-example-doc-tpl">
+                <h2 class="top" style="display: block">
+                    <div style="display: flex;align-items: center;">
+                        <span>{{name}}</span>
+                        {{if target_type != 'folder'}}
+                        <!-- <button title="复制当前文档/接口数据到剪贴板" class="CopyCurrentData" data-clipboard-action="copy" data-clipboard-text="" data-target_id="{{local_target_id}}">
+                          <img src="./v6/docs/img/copy.svg" alt="" style="margin-right:2px">
+                          复制接口
+                          <a  style="margin-left:2px" href="./document/00091641-1e36-490d-9caf-3e47cd38bcde/0b622ce8-68c0-4a00-88ba-287bdae336ad" target="_blank" rel="noopener noreferrer">
+                            <img style="cursor: pointer;" src="./v6/docs/img/vars.svg"  alt="">
+                          </a>
+                        </button> -->
+                        <!-- <button class="opneApis" data-target_id="{{local_target_id}}">
+                          <img src="./v6/docs/img/open.svg" alt="">
+                          在工作台打开
+                        </button> -->
+                        <!-- <a href="./document/00091641-1e36-490d-9caf-3e47cd38bcde/0b622ce8-68c0-4a00-88ba-287bdae336ad" title="什么是复制接口？" target="_blank"><i class="fa fa-question-circle-o" aria-hidden="true"></i></a> -->
+                        {{/if}}
+                    </div>
+                    <span class="metadata">创建人：{{create_users.create_user}} &nbsp;&nbsp;&nbsp;&nbsp; 最后更新：{{create_users.update_user}} &nbsp;&nbsp;&nbsp;&nbsp;更新时间：{{@dateFormat(update_dtime * 1000,'yyyy-MM-dd hh:mm:ss')}}</span>
+                </h2>
+                {{if target_type == 'folder'}}
+                <h3 class="title" style="{{request.description ? 'visibility: visible;':'visibility:hidden;height:0;margin:0;'}}" ><a href="javascript:;" class="maodian">
+                        <img src="./v6/docs/img/book.svg" alt="">
+                    </a> 目录说明 <i class="fa fa-angle-down"></i></h3>
+                {{if request.description}}
+                <div class="editor-preview desc markdown-section">
+                    {{@marked(request.description)}}
+                </div>
+                {{/if}}
+                {{else}}
+                <h3 class="title" style="{{request.description ? 'visibility: visible;':'visibility:hidden;height:0;margin:0;'}}" ><a href="javascript:;" class="maodian">
+                        <img src="./v6/docs/img/book.svg" alt="">
+                    </a> 接口说明 <i class="fa fa-angle-down"></i></h3>
+                {{if request.description}}
+                <div class="editor-preview desc markdown-section">
+                    {{@marked(request.description)}}
+                </div>
+                {{/if}}
+                {{/if}}
+                {{if (target_type == 'example' && is_doc == '0') || target_type == 'api'}}
+                <h3 class="title"><a href="javascript:;" class="maodian">
+                        <img src="./v6/docs/img/info.svg" alt="">
+                    </a> 基本信息 <i class="fa fa-angle-down"></i></h3>
+                <ul class="editor-preview-info">
+                    <li><strong>接口状态：</strong> <code class="span" style="color: {{markColor}};">{{markName}}</code></li>
+                    <li><strong>接口URL：</strong> <code class="span">{{request.url ? request.url : 'url为空...'}}</code>
+                    </li>
+                    <li><strong>请求方式：</strong> <code class="span">{{method}}</code></li>
+                    <li><strong>Content-Type：</strong> <code class="span">{{request.body.mode}}</code></li>
+                </ul>
+
+                <h3 class="title" style="{{request.header.parameter.length > 0 || request.query.parameter.length > 0 || request.resful.parameter.length > 0 || request.body.parameter.length>0 ||request.body.raw !='' || (request?.auth?.type && request?.auth?.type != 'noauth') ? 'visibility:visible':'visibility:hidden;height:0;margin:0;'}}"><a href="javascript:;" class="maodian">
+                        <img src="./v6/docs/img/globals.svg" alt="">
+                    </a> 请求参数 <i class="fa fa-angle-down"></i></h3>
+                {{if request.header.parameter.length > 0 || request.query.parameter.length > 0 || request.resful.parameter.length > 0 || request.body.parameter.length>0 ||request.body.raw !='' || (request?.auth?.type && request?.auth?.type != 'noauth')}}
+                <div class="markdown-request">
+                    <h4 class="title" style="{{request.header.parameter.length > 0? 'visibility:visible':'visibility:hidden;height:0;margin:0;'}}"><a href="javascript:;" class="maodian"></a> Header参数及说明</h4>
+                    {{if request.header.parameter.length > 0}}
+                    <div>
+                        <table>
+                            <tr>
+                                <th>参数名</th>
+                                <th>示例值</th>
+                                <th>参数类型</th>
+                                <th>是否必填</th>
+                                <th>参数描述</th>
+                            </tr>
+                            {{each request.header.parameter item}}
+                            {{if item.key}}
+                            <tr>
+                                <td>
+                                    {{if item.key_var}}
+                                    {{item.key_var}}
+                                    <img src="./v6/docs/img/vars.svg" alt="">
+                                    <div class="vars_title">
+                                        变量{{item.key}} 生成
+                                    </div>
+                                    {{else}}
+                                    {{item.key}}
+                                    {{/if}}
+                                </td>
+                                <td>
+                                    {{if item.value_var}}
+                                    {{item.value_var}}
+                                    <img src="./v6/docs/img/vars.svg" alt="">
+                                    <div class="vars_title">
+                                        变量{{item.value}} 生成
+                                    </div>
+                                    {{else}}
+                                    {{item.value == '' ? '-' : item.value }}
+                                    {{/if}}
+                                </td>
+                                <td>{{item.field_type == "" || item.field_type == "[]"? (typeof item.value) :
+                                    item.field_type}}
+                                </td>
+                                <td>{{item.not_null == "1" ? '是' : '否'}}</td>
+                                <td><pre>{{item.description == '' ? '-' : item.description }}</pre></td>
+                            </tr>
+                            {{/if}}
+                            {{/each}}
+                        </table>
+                    </div>
+                    {{/if}}
+
+                    <h4 class="title" style="{{request.query.parameter.length > 0 ? 'visibility:visible':'visibility:hidden;height:0;margin:0;'}}"><a href="javascript:;" class="maodian"></a> Query参数及说明</h4>
+                    {{if request.query.parameter.length > 0}}
+                    <div>
+                        <table>
+                            <tr>
+                                <th>参数名</th>
+                                <th>示例值</th>
+                                <th>参数类型</th>
+                                <th>是否必填</th>
+                                <th>参数描述</th>
+                            </tr>
+
+                            {{each request.query.parameter item}}
+                            {{if item.key}}
+                            <tr>
+                                <td>
+                                    {{if item.key_var}}
+                                    {{item.key_var}}
+                                    <img src="./v6/docs/img/vars.svg" alt="">
+                                    <div class="vars_title">
+                                        变量{{item.key}} 生成
+                                    </div>
+                                    {{else}}
+                                    {{item.key}}
+                                    {{/if}}
+                                </td>
+                                <td>
+                                    {{if item.value_var}}
+                                    {{item.value_var}}
+                                    <img src="./v6/docs/img/vars.svg" alt="">
+                                    <div class="vars_title">
+                                        变量{{item.value}} 生成
+                                    </div>
+                                    {{else}}
+                                    {{item.value == '' ? '-' : item.value }}
+                                    {{/if}}
+                                </td>
+                                <td>{{item.field_type == "" || item.field_type == "[]"? (typeof item.value) :
+                                    item.field_type}}
+                                </td>
+                                <td>{{item.not_null == "1" ? '是' : '否'}}</td>
+                                <td><pre>{{item.description == '' ? '-' : item.description }}</pre></td>
+                            </tr>
+                            {{/if}}
+                            {{/each}}
+                        </table>
+                    </div>
+                    {{/if}}
+
+                    <h4 class="title" style="{{request.resful.parameter.length ? 'visibility:visible':'visibility:hidden;height:0;margin:0;'}}"><a href="javascript:;" class="maodian"></a> 路径参数及说明</h4>
+                    {{if request.resful.parameter.length > 0}}
+                    <div>
+                        <table>
+                            <tr>
+                                <th>参数名</th>
+                                <th>示例值</th>
+                                <!--
+                                <th>参数类型</th>
+                                <th>是否必填</th>
+                                -->
+                                <th>参数描述</th>
+                            </tr>
+
+                            {{each request.resful.parameter item}}
+                            {{if item.key}}
+                            <tr>
+                                <td>
+                                    {{if item.key_var}}
+                                    {{item.key_var}}
+                                    <img src="./v6/docs/img/vars.svg" alt="">
+                                    <div class="vars_title">
+                                        变量{{item.key}} 生成
+                                    </div>
+                                    {{else}}
+                                    {{item.key}}
+                                    {{/if}}
+                                </td>
+                                <td>
+                                    {{if item.value_var}}
+                                    {{item.value_var}}
+                                    <img src="./v6/docs/img/vars.svg" alt="">
+                                    <div class="vars_title">
+                                        变量{{item.value}} 生成
+                                    </div>
+                                    {{else}}
+                                    {{item.value == '' ? '-' : item.value }}
+                                    {{/if}}
+                                </td>
+                                <!--
+                                <td>{{item.field_type == "" || item.field_type == "[]"? (typeof item.value) :
+                                    item.field_type}}
+                                </td>
+                                <td>{{item.not_null == "1" ? '是' : '否'}}</td>
+                                -->
+                                <td><pre>{{item.description == '' ? '-' : item.description }}</pre></td>
+                            </tr>
+                            {{/if}}
+                            {{/each}}
+                        </table>
+                    </div>
+                    {{/if}}
+
+                    <h4 class="title" style="{{ request?.auth.type && request?.auth.type != 'noauth' ? 'visibility:visible':'visibility:hidden;height:0;margin:0;'}}"><a href="javascript:;" class="maodian"></a> 认证及说明</h4>
+                    {{if request?.auth.type && request?.auth.type != 'noauth'}}
+                    <div>
+                        {{if request?.auth?.type == 'kv'}}
+                        <table class="auth">
+                            <tr>
+                                <td>认证类型：私密键值对</td>
+                                <td> 键： {{request?.auth?.kv?.key}}</td>
+                                <td> 值：{{request?.auth?.kv?.value}}</td>
+                            </tr>
+                        </table>
+                        {{/if}}
+                        {{if request.auth.type == 'basic'}}
+                        <table class="auth">
+                            <tr>
+                                <td>认证类型：Basic auth认证</td>
+                                <td>用户名： {{request?.auth?.basic?.username}}</td>
+                                <td>密码： {{request?.auth?.basic?.password}}</td>
+                            </tr>
+                        </table>
+                        {{/if}}
+                        {{if request?.auth?.type == 'bearer'}}
+                        <table class="auth">
+                            <tr>
+                                <td>认证类型：Bearer auth认证</td>
+                                <td>Token：{{request?.auth?.bearer?.key}}</td>
+                            </tr>
+                        </table>
+                        {{/if}}
+                    </div>
+                    {{/if}}
+
+                    <h4 class="title" style="{{request.body.parameter.length > 0 || request.body.raw !='' ? 'visibility:visible':'visibility:hidden;height:0;margin:0;'}}"><a href="javascript:;" class="maodian"></a> body参数及说明</h4>
+                    {{if request.body.parameter.length>0 ||request.body.raw !='' }}
+                    {{if request.body.mode == 'form-data' || request.body.mode == 'multipart/form-data' ||
+                    request.body.mode =='application/x-www-form-urlencoded' || request.body.mode=="urlencoded"}}
+                    <div>
+                        <table>
+                            <tr>
+                                <th>参数名</th>
+                                <th>示例值</th>
+                                <th>参数类型</th>
+                                <th>是否必填</th>
+                                <th>参数描述</th>
+                            </tr>
+                            {{if request.body.parameter.length > 0}}
+                            {{each request.body.parameter item}}
+                            {{if item.key}}
+                            <tr>
+                                <td>
+                                    {{if item.key_var}}
+                                    {{item.key_var}}
+                                    <img src="./v6/docs/img/vars.svg" alt="">
+                                    <div class="vars_title">
+                                        变量{{item.key}} 生成
+                                    </div>
+                                    {{else}}
+                                    {{item.key}}
+                                    {{/if}}
+                                </td>
+                                <td>
+                                    {{if item.value_var}}
+                                    {{item.value_var}}
+                                    <img src="./v6/docs/img/vars.svg" alt="">
+                                    <div class="vars_title">
+                                        变量{{item.value}} 生成
+                                    </div>
+                                    {{else}}
+                                    {{item.value == '' ? '-' : item.value }}
+                                    {{/if}}
+                                </td>
+                                <td>{{item.field_type == "" || item.field_type == "[]"? (typeof item.value) :
+                                    item.field_type}}
+                                </td>
+                                <td>{{item.not_null == "1" ? '是' : '否'}}</td>
+                                <td><pre>{{item.description == '' ? '-' : item.description }}</pre></td>
+                            </tr>
+                            {{/if}}
+                            {{/each}}
+                            {{else}}
+                            <tr>
+                                <td colspan="5" style="text-align:center">暂无数据</td>
+                            </tr>
+                            {{/if}}
+                        </table>
+                    </div>
+                    {{else}}
+                    <div class="editor-preview">
+                        <input type="hidden" id="request_body_raw_editor_input" value="{{request.body.raw}}">
+                        <pre id="request_body_raw_editor_json"><code class="hljs json">{{request.body.raw}}</code></pre>
+
+                        <!-- <pre><code class="hljs json">{{request.body.raw}}</code></pre> -->
+                    </div>
+                    {{if request.body.raw_para.length > 0}}
+                    <h4><a href="javascript:;" class="maodian"></a> 字段描述</h4>
+                    <table>
+                        <tr>
+                            <th>参数名</th>
+                            <th>示例值</th>
+                            <th>参数类型</th>
+                            <!-- <th>是否必填</th> -->
+                            <th>参数描述</th>
+                        </tr>
+                        {{each request.body.raw_para item}}
+                        {{if item.key}}
+                        <tr>
+                            <td>{{@keyFormat(item.key)}}</td>
+                            <td>{{item.value == '' ? '-' : item.value }}</td>
+                            <td>{{item.field_type}}</td>
+                            <!-- <td>{{item.not_null == "1" ? '是' : '否'}}</td> -->
+                            <td><pre>{{item.description == '' ? '-' : item.description }}</pre></td>
+                        </tr>
+                        {{/if}}
+                        {{/each}}
+                    </table>
+                    {{/if}}
+                    {{/if}}
+                    <!--                    {{if request.event.pre_script != ''}}-->
+                    <!--                    <h4 class="title"><a href="javascript:;" class="maodian"></a> 预执行脚本</h4>-->
+                    <!--                    <div class="editor-preview">-->
+                    <!--                        <pre><code class="hljs">{{request.event.pre_script}}</code></pre>-->
+                    <!--                    </div>-->
+                    <!--                    {{/if}}-->
+                    <!--                    {{if request.event.test != ''}}-->
+                    <!--                    <h4 class="title"><a href="javascript:;" class="maodian"></a> 后执行脚本</h4>-->
+                    <!--                    <div class="editor-preview">-->
+                    <!--                        <pre><code class="hljs">{{request.event.test}}</code></pre>-->
+                    <!--                    </div>-->
+                    <!--                    {{/if}}-->
+
+                    {{/if}}
+                </div>
+                {{/if}}
+                <!--respond-->
+
+                <h3 class="title" style="{{response.success.raw || response.success.parameter.length > 0 || response.error.raw || response.error.parameter.length > 0 ? 'visibility: visible;':'visibility: hidden'}}"><a href="javascript:;" class="maodian">
+                        <img src="./v6/docs/img/globals.svg" alt="">
+                    </a> 响应示例<i class="fa fa-angle-down"></i></h3>
+                {{if response.success.raw || response.success.parameter.length > 0 || response.error.raw || response.error.parameter.length > 0}}
+                <div class="markdown-response">
+                    {{if response.success.raw || response.success.parameter.length > 0}}
+                    <h4 ><a href="javascript:;" class="maodian"></a> 成功响应示例</h4>
+                    <div class="editor-preview">
+                        <input type="hidden" id="response_success_editor_input" value="{{response.success.raw}}">
+                        <pre id="response_success_editor_json"><code class=" json">{{response.success.raw}}</code></pre>
+                    </div>
+                    {{if response.success.parameter.length > 0}}
+                    <h4><a href="javascript:;" class="maodian"></a> 字段描述</h4>
+                    <table class="response-parameter">
+                        <tr>
+                            <th>参数名</th>
+                            <th>示例值</th>
+                            <th>参数类型</th>
+                            <th>参数描述</th>
+                        </tr>
+                        {{each response.success.parameter item}}
+                        <tr>
+                            <td>{{@keyFormat(item.key)}}</td>
+                            <td>{{item.value == '' ? '-' : item.value }}</td>
+                            <td>{{item.field_type}}</td>
+                            <td><pre>{{item.description == '' ? '-' : item.description }}</pre></td>
+                        </tr>
+                        {{/each}}
+                    </table>
+                    {{/if}}
+                    {{/if}}
+                    {{if response.error.raw || response.error.parameter.length > 0}}
+                    <h4 ><a href="javascript:;" class="maodian"></a> 失败响应示例</h4>
+                    <div class="editor-preview">
+                        <input type="hidden" id="response_error_editor_input" value="{{response.error.raw}}">
+                        <pre id="response_error_editor_json">
+                            <code class="hljs json">{{response.error.raw}}</code>
+                        </pre>
+                    </div>
+                    {{if response.error.parameter.length > 0}}
+                    <h4><a href="javascript:;" class="maodian"></a> 字段描述</h4>
+                    <table class="response-parameter">
+                        <tr>
+                            <th>参数名</th>
+                            <th>示例值</th>
+                            <th>参数类型</th>
+                            <th>参数描述</th>
+                        </tr>
+                        {{each response.error.parameter item}}
+                        <tr>
+                            <td>{{@keyFormat(item.key)}}</td>
+                            <td>{{item.value == '' ? '-' : item.value }}</td>
+                            <td>{{item.field_type}}</td>
+                            <td><pre>{{item.description == '' ? '-' : item.description }}</pre></td>
+                        </tr>
+                        {{/each}}
+                    </table>
+                    {{/if}}
+                    {{/if}}
+                </div>
+                {{/if}}
+                {{else if target_type == 'folder'}}
+                <h3 class="title"><a href="javascript:;" class="maodian">
+                        <img src="./v6/docs/img/globals.svg" alt="">
+                    </a>公共参数<i class="fa fa-angle-down"></i></h3>
+                <div class="markdown-request">
+                    <h4 class="title" style="{{ request.header.length > 0 ?'visibility:visible':'visibility:hidden;height:0;margin:0;'}}"><a href="javascript:;" class="maodian"></a> Header参数及说明</h4>
+                    {{if request.header.length > 0}}
+                    <div>
+                        <table class="header">
+                            <tr>
+                                <th>参数名</th>
+                                <th>示例值</th>
+                                <!-- <th>参数类型</th> -->
+                                <th>参数描述</th>
+                            </tr>
+                            {{each request.header item}}
+                            {{if item.key}}
+                            <tr>
+                                <td>
+                                    {{if item.key_var}}
+                                    {{item.key_var}}
+                                    <img src="./v6/docs/img/vars.svg" alt="">
+                                    <div class="vars_title">
+                                        变量{{item.key}} 生成
+                                    </div>
+                                    {{else}}
+                                    {{item.key}}
+                                    {{/if}}
+                                </td>
+                                <td>
+                                    {{if item.value_var}}
+                                    {{item.value_var}}
+                                    <img src="./v6/docs/img/vars.svg" alt="">
+                                    <div class="vars_title">
+                                        变量{{item.value}} 生成
+                                    </div>
+                                    {{else}}
+                                    {{item.value == '' ? '-' : item.value}}
+                                    {{/if}}
+                                </td>
+                                <!-- <td>{{item.field_type == "" || item.field_type == "[]"? (typeof item.value) :
+                                    item.field_type}}
+                                </td> -->
+                                <td><pre>{{item.description == '' ? '-' : item.description }}</pre></td>
+                            </tr>
+                            {{/if}}
+                            {{/each}}
+                        </table>
+                    </div>
+                    {{/if}}
+                    <h4 class="title" style="{{ request.query.length > 0 ?'visibility:visible':'visibility:hidden;height:0;margin:0;'}}"><a href="javascript:;" class="maodian"></a> Query参数及说明</h4>
+                    {{if request.query.length > 0}}
+                    <div>
+                        <table class="query">
+                            <tr>
+                                <th>参数名</th>
+                                <th>示例值</th>
+                                <!-- <th>参数类型</th> -->
+                                <th>参数描述</th>
+                            </tr>
+                            {{each request.query item}}
+                            {{if item.key}}
+                            <tr>
+                                <td>
+                                    {{if item.key_var}}
+                                    {{item.key_var}}
+                                    <img src="./v6/docs/img/vars.svg" alt="">
+                                    <div class="vars_title">
+                                        变量{{item.key}} 生成
+                                    </div>
+                                    {{else}}
+                                    {{item.key}}
+                                    {{/if}}
+                                </td>
+                                <td>
+                                    {{if item.value_var}}
+                                    {{item.value_var}}
+                                    <img src="./v6/docs/img/vars.svg" alt="">
+                                    <div class="vars_title">
+                                        变量{{item.value}} 生成
+                                    </div>
+                                    {{else}}
+                                    {{item.value == '' ? '-' : item.value}}
+                                    {{/if}}
+                                </td>
+                                <!-- <td>{{item.field_type == "" || item.field_type == "[]"? (typeof item.value) :
+                                    item.field_type}}
+                                </td> -->
+                                <td><pre>{{item.description == '' ? '-' : item.description }}</pre></td>
+                            </tr>
+                            {{/if}}
+                            {{/each}}
+                        </table>
+                    </div>
+                    {{/if}}
+                    <h4 class="title" style="{{ request.body.length > 0 ?'visibility:visible':'visibility:hidden;height:0;margin:0;'}}"><a href="javascript:;" class="maodian"></a> Body参数及说明</h4>
+                    {{if request.body.length > 0}}
+                    <div>
+                        <table class="body">
+                            <tr>
+                                <th>参数名</th>
+                                <th>示例值</th>
+                                <!-- <th>参数类型</th> -->
+                                <th>参数描述</th>
+                            </tr>
+                            {{each request.body item}}
+                            {{if item.key}}
+                            <tr>
+                                <td>
+                                    {{if item.key_var}}
+                                    {{item.key_var}}
+                                    <img src="./v6/docs/img/vars.svg" alt="">
+                                    <div class="vars_title">
+                                        变量{{item.key}} 生成
+                                    </div>
+                                    {{else}}
+                                    {{item.key}}
+                                    {{/if}}
+                                </td>
+                                <td>
+                                    {{if item.value_var}}
+                                    {{item.value_var}}
+                                    <img src="./v6/docs/img/vars.svg" alt="">
+                                    <div class="vars_title">
+                                        变量{{item.value}} 生成
+                                    </div>
+                                    {{else}}
+                                    {{item.value == '' ? '-' : item.value}}
+                                    {{/if}}
+                                </td>
+                                <!-- <td>{{item.field_type == "" || item.field_type == "[]"? (typeof item.value) :
+                                    item.field_type}}
+                                </td> -->
+                                <td><pre>{{item.description == '' ? '-' : item.description }}</pre></td>
+                            </tr>
+                            {{/if}}
+                            {{/each}}
+                        </table>
+                    </div>
+                    {{/if}}
+                    {{if request?.auth?.type != 'noauth' && request?.auth?.type}}
+                    <h4 class="title">认证及说明</h4>
+                    {{if request?.auth?.type == 'kv'}}
+                    <table class="auth">
+                        <tr>
+                            <td>认证类型：私密键值对</td>
+                            <td>键：{{request?.auth?.kv?.key}}</td>
+                            <td>值：{{request?.auth?.kv?.value}}</td>
+                        </tr>
+                    </table>
+                    {{/if}}
+                    {{if request.auth.type == 'basic'}}
+                    <table class="auth">
+                        <tr>
+                            <td>认证类型：Basic auth认证</td>
+                            <td>用户名：{{request?.auth?.basic?.username}}</td>
+                            <td>密码：{{request?.auth?.basic?.password}}</td>
+                        </tr>
+                    </table>
+                    {{/if}}
+                    {{if request?.auth?.type == 'bearer'}}
+                    <table class="auth">
+                        <tr>
+                            <td>认证类型：Bearer auth认证</td>
+                            <td>Token：{{request?.auth?.bearer?.key}}</td>
+                        </tr>
+                    </table>
+                    {{/if}}
+                    {{/if}}
+                </div>
+                <!--respond-->
+                {{/if}}
+                <div class="footer" style="text-align: center;margin: 35px 0;height: 50px">本文档由 <a href="https://www.apipost.cn/" target="_blank" style="color:#3a86ff">APIPOST接口调试与管理工具</a> 生成</div>
+            </script>
+        </div>
+    </div>
+</div>
+<script type="text/html" id="golbal-env-tpl">
+    <h2 class="top">
+        <span>全局参数</span>
+        <span class="metadata">
+            创建时间：{{@dateFormat(create_dtime * 1000,'yyyy-MM-dd hh:mm:ss')}}
+            {{if expire_time != -1}}
+                <span style="color: #f44336; margin-left: 15px; font-weight: bold;"> 过期时间： {{@dateFormat(expire_time * 1000,'yyyy-MM-dd hh:mm:ss')}}</span>
+            {{/if}}
+        </span>
+
+    </h2>
+    <div class="editor-preview desc">
+    <!-- <p>本文档是MF网络验证系统的接口文档，以下为当前项目下的公共参数。</p> -->
+    </div>
+
+    <h3 class="title">
+        <a href="javascript:;" class="maodian">
+            <img src="./v6/docs/img/globals.svg" alt="">
+        </a>
+        全局参数
+        {{if vars?.request?.header?.length > 0 || vars?.request?.query?.length > 0 || vars?.request?.body?.length > 0 || vars?.auth?.type != 'noauth'}}
+        <i class="fa fa-angle-down"></i>
+        {{/if}}
+    </h3>
+    {{if vars?.request?.header?.length > 0 || vars?.request?.query?.length > 0 || vars?.request?.body?.length > 0 || vars?.auth?.type != 'noauth'}}
+    <div>
+        {{if vars.request.header.length > 0}}
+        <h4>Header参数及说明</h4>
+        <table>
+            <tr>
+                <th>参数名</th>
+                <th>参数值</th>
+                <th>参数描述</th>
+            </tr>
+            {{each vars.request.header item}}
+            <tr>
+                <td>
+                    {{if item.key_var}}
+                    {{item.key_var}}
+                    <img src="./v6/docs/img/vars.svg" alt="">
+                    <div class="vars_title">
+                        变量{{item.key}} 生成
+                    </div>
+                    {{else}}
+                    {{item.key}}
+                    {{/if}}
+                </td>
+                <td>
+                    {{if item.value_var}}
+                    {{item.value_var}}
+                    <img src="./v6/docs/img/vars.svg" alt="">
+                    <div class="vars_title">
+                        变量{{item.value}} 生成
+                    </div>
+                    {{else}}
+                    {{item.value == '' ? '-' : item.value }}
+                    {{/if}}
+                </td>
+                <td><pre>{{item.description == '' ? '-' : item.description }}</pre></td>
+            </tr>
+            {{/each}}
+        </table>
+        {{/if}}
+
+        {{if vars.request.query.length > 0}}
+        <h4>Query参数及说明</h4>
+        <table>
+            <tr>
+                <th>参数名</th>
+                <th>参数值</th>
+                <th>参数描述</th>
+            </tr>
+
+            {{each vars.request.query item}}
+            <tr>
+                <td>
+                    {{if item.key_var}}
+                    {{item.key_var}}
+                    <img src="./v6/docs/img/vars.svg" alt="">
+                    <div class="vars_title">
+                        变量{{item.key}} 生成
+                    </div>
+                    {{else}}
+                    {{item.key}}
+                    {{/if}}
+                </td>
+                <td>
+                    {{if item.value_var}}
+                    {{item.value_var}}
+                    <img src="./v6/docs/img/vars.svg" alt="">
+                    <div class="vars_title">
+                        变量{{item.value}} 生成
+                    </div>
+                    {{else}}
+                    {{item.value == '' ? '-' : item.value }}
+                    {{/if}}
+                </td>
+                <td>
+                    <pre>{{item.description == '' ? '-' : item.description }}</pre>
+                </td>
+            </tr>
+            {{/each}}
+        </table>
+        {{/if}}
+
+        {{if vars?.request?.body?.length > 0}}
+        <h4>Body参数及说明</h4>
+        <table>
+            <tr>
+                <th>参数名</th>
+                <th>参数值</th>
+                <th>参数描述</th>
+            </tr>
+            {{each vars?.request?.body item}}
+            <tr>
+                <td>
+                    {{if item.key_var}}
+                    {{item.key_var}}
+                    <img src="./v6/docs/img/vars.svg" alt="">
+                    <div class="vars_title">
+                        变量{{item.key}} 生成
+                    </div>
+                    {{else}}
+                    {{item.key}}
+                    {{/if}}
+                </td>
+                <td>
+                    {{if item.value_var}}
+                    {{item.value_var}}
+                    <img src="./v6/docs/img/vars.svg" alt="">
+                    <div class="vars_title">
+                        变量{{item.value}} 生成
+                    </div>
+                    {{else}}
+                    {{item.value == '' ? '-' : item.value }}
+                    {{/if}}
+                </td>
+                <td><pre>{{item.description == '' ? '-' : item.description }}</pre></td>
+            </tr>
+            {{/each}}
+        </table>
+        {{/if}}
+        {{if vars?.auth?.type != 'noauth'}}
+        <h4>认证及说明</h4>
+        {{if vars?.auth?.type == 'kv'}}
+        <table>
+            <tr>
+                <td>认证类型：私密键值对</td>
+                <td>键：{{vars?.auth?.kv?.key}}</td>
+                <td>值：{{vars?.auth?.kv?.value}}</td>
+            </tr>
+        </table>
+        {{/if}}
+        {{if vars.auth.type == 'basic'}}
+        <table>
+            <tr>
+                <td>认证类型：Basic auth认证</td>
+                <td>用户名：{{vars?.auth?.basic?.username}}</td>
+                <td>密码：{{vars?.auth?.basic?.password}}</td>
+            </tr>
+        </table>
+        {{/if}}
+        {{if vars?.auth?.type == 'bearer'}}
+        <table>
+            <tr>
+                <td>认证类型：Bearer auth认证</td>
+                <td>Token：{{vars?.auth?.bearer?.key}}</td>
+            </tr>
+        </table>
+        {{/if}}
+        {{/if}}
+        <!--        {{if vars.script.pre_script != ""}}-->
+        <!--        <h4 class="title"><a href="javascript:;" class="maodian"></a> 预执行脚本</h4>-->
+        <!--        <div class="editor-preview">-->
+        <!--            <pre><code class="hljs">{{vars.script.pre_script}}</code></pre>-->
+        <!--        </div>-->
+        <!--        {{/if}}-->
+        <!--        {{if vars.script.test != "" }}-->
+        <!--        <h4 class="title"><a href="javascript:;" class="maodian"></a> 后执行脚本</h4>-->
+        <!--        <div class="editor-preview">-->
+        <!--            <pre><code class="hljs">{{vars.script.test}}</code></pre>-->
+        <!--        </div>-->
+        <!--        {{/if}}-->
+    </div>
+    {{else}}
+    <div style="text-align: center;display: block"><img src="./v6/docs/img/emptyglobals.svg" style="width: 100px;margin:20px auto 20px;">暂无参数</div>
+    {{/if}}
+
+    <div class="footer" style="text-align: center;margin: 35px 24px;height: 50px;">本文档由 <a href="https://www.apipost.cn/" target="_blank" style="color:#3a86ff">APIPOST接口调试与管理工具</a> 生成</div>
+</script>
+<script type="text/html" id="doc-head-tpl">
+    <div class="export">
+
+    </div>
+    <div class="user_photo">
+        <img src="{{portrait}}"alt="">
+    </div>
+</script>
+<script type="text/html" id="project-name-tpl">
+    <img src="./v6/docs/img/project.svg" alt="">
+    {{project_name}}
+</script>
+<script>
+    template.defaults.imports.marked = function (md) {
+        marked.setOptions({
+            renderer: new marked.Renderer(),
+            highlight: function (code) {
+                return hljs.highlight('javascript', code).value;
+            },
+            breaks: true,
+            sanitize: true
+        });
+        return marked(md).replace(/<pre>/g, "<pre class='hljs javascript'>");
+    }
+    function dateFormat(date, format) {
+        date = new Date(date);
+        var map = {
+            "M": date.getMonth() + 1, //月份
+            "d": date.getDate(), //日
+            "h": date.getHours(), //小时
+            "m": date.getMinutes(), //分
+            "s": date.getSeconds(), //秒
+            "q": Math.floor((date.getMonth() + 3) / 3), //季度
+            "S": date.getMilliseconds() //毫秒
+        };
+        format = format.replace(/([yMdhmsqS])+/g, function (all, t) {
+            var v = map[t];
+            if (v !== undefined) {
+                if (all.length > 1) {
+                    v = '0' + v;
+                    v = v.substr(v.length - 2);
+                }
+                return v;
+            } else if (t === 'y') {
+                return (date.getFullYear() + '').substr(4 - all.length);
+            }
+            return all;
+        });
+        return format;
+    };
+    template.defaults.imports.dateFormat = dateFormat;
+    function dragControllerDiv(resize, left, mid, box) {
+        for (let i = 0; i < resize.length; i++) {
+            // 鼠标按下事件
+            resize[i].onmousedown = function (e) {
+                //颜色改变提醒
+                resize[i].style.borderColor = "#9d9d9d";
+                var startX = e.clientX;
+                resize[i].left = resize[i].offsetLeft;
+                // 鼠标拖动事件
+                document.onmousemove = function (e) {
+                    var endX = e.clientX;
+                    var moveLen = resize[i].left + (endX - startX); // （endx-startx）=移动的距离。resize[i].left+移动的距离=左边区域最后的宽度
+                    var maxT = box[i].clientWidth - resize[i].offsetWidth; // 容器宽度 - 左边区域的宽度 = 右边区域的宽度
+
+                    if (moveLen < 300) moveLen = 300; // 左边区域的最小宽度为32px
+                    if (moveLen > maxT - 150) moveLen = maxT - 150; //右边区域最小宽度为150px
+
+                    resize[i].style.left = moveLen; // 设置左侧区域的宽度
+                    $('.target.title').css({ maxWidth: moveLen + 'px' })
+                    for (let j = 0; j < left.length; j++) {
+                        left[j].style.width = moveLen + "px";
+                        mid[j].style.width = box[i].clientWidth - moveLen - 10 + "px";
+                    }
+                };
+                // 鼠标松开事件
+                document.onmouseup = function (evt) {
+                    //颜色恢复
+                    resize[i].style.borderColor = "#d6d6d6";
+                    document.onmousemove = null;
+                    document.onmouseup = null;
+                    resize[i].releaseCapture && resize[i].releaseCapture(); //当你不在需要继续获得鼠标消息就要应该调用ReleaseCapture()释放掉
+                };
+                resize[i].setCapture && resize[i].setCapture(); //该函数在属于当前线程的指定窗口里设置鼠标捕获
+                return false;
+            };
+        }
+    }
+    function keyFormat(params) {
+        let arr = params.split('.');
+        let str = ''
+        for (let i = 0; i < arr.length - 1; i++) {
+            str += `<span style="color:#999">${arr[i]}.</span>`
+        }
+        str += arr[arr.length - 1];
+        return str;
+    }
+    template.defaults.imports.keyFormat = keyFormat;
+    let timer = null
+    let arr = {"id":187353,"project_id":2093356,"name":"MF网络验证系统","url":"4cfc708538440167","salt":"135183606874aab9","password":"","env_id":"-1","create_time":1641728409,"target_id":2093356,"target_type":"project","expire_days":-1,"expire_time":-1,"project_name":"MF网络验证系统","portrait":".\/user\/default_profile_photo\/Vector-8.png","nick_name":"Sleep","publisher":"Sleep","pub_name":"MF网络验证系统","project":{"vars":{"request":{"header":[],"query":[],"cookie":[],"body":[]},"script":{"pre_script":"","test":""},"variable":[],"auth":{"type":"noauth","kv":{"key":"","value":""},"bearer":{"key":""},"basic":{"username":"","password":""}},"methods":["POST","GET","PUT","PATCH","DELETE","COPY","HEAD","OPTIONS","LINK","UNLINK","PURGE","LOCK","UNLOCK","PROPFIND","VIEW"],"mark":[{"key":"developing","name":"开发中","color":"#3A86FF"},{"key":"complated","name":"已完成","color":"#2BA58F"},{"key":"modifying","name":"需修改","color":"#EC4646"}]}},"children":[{"local_target_id":"0fb7b784-1eb3-429a-af1d-5bd3f7c7ffcf","local_parent_id":"0","name":"使用前说明","method":"POST","mark":"developing","is_doc":0,"target_type":"folder","status":1,"sort":0,"create_dtime":1616639819,"update_dtime":1641811782,"target_id":22493851,"create_users":{"create_user":"Sleep","update_user":"Sleep"},"request":{"description":"","header":[],"query":[],"body":[],"auth":[]},"script":{"pre_script":"","test":""},"children":[{"local_target_id":"3957177b-4049-40b2-959b-55e6ce5de884","local_parent_id":"0fb7b784-1eb3-429a-af1d-5bd3f7c7ffcf","name":"使用须知","method":"POST","mark":"developing","is_doc":0,"target_type":"doc","status":1,"sort":0,"create_dtime":1616639819,"update_dtime":1645865643,"target_id":22494328,"create_users":{"create_user":"Sleep","update_user":"Sleep"},"request":{"url":"","description":"官方网站(第一次速度很慢很正常 耐心等待 下次打开就会快了)：\nhttps:\/\/www.dllapi.com\/\n\n资源下载网盘(访问密码:bf3e)：\nhttps:\/\/wwa.lanzoui.com\/b0creabid \n无法访问请尝试访问 lanzou.com\/b0creabid 或更换电脑DNS\n\n验证文档地址(不定期更新)：\nhttps:\/\/docs.apipost.cn\/preview\/4cfc708538440167\/135183606874aab9\n\n在线视频教程(无声)：\nhttps:\/\/www.bilibili.com\/video\/BV1Uq4y1t7xy\n\n验证交流群(群号:221689201)：\nhttps:\/\/jq.qq.com\/?_wv=1027&k=1L1SaHs0\n\n有开发者反应 有部分服务器上使用服务端无法打开，可以试试资源网盘的 【服务端启动器_解决无法正常启动服务端.zip】\n\nMF网络验证系统 严禁用于违反《计算机安全法》的任何活动，否则后果自负！！！\nMF网络验证系统 严禁用于违反《计算机安全法》的任何活动，否则后果自负！！！\nMF网络验证系统 严禁用于违反《计算机安全法》的任何活动，否则后果自负！！！","auth":{"type":"noauth","kv":{"key":"","value":""},"bearer":{"key":""},"basic":{"username":"","password":""}},"body":{"mode":"json","parameter":[],"raw":"","raw_para":[]},"event":{"pre_script":"","test":""},"header":{"parameter":[]},"query":{"parameter":[]},"cookie":{"parameter":[]},"resful":{"parameter":[]}},"response":{"success":{"raw":"","parameter":[]},"error":{"raw":"","parameter":[]}}},{"local_target_id":"a6a5aa4f-a38d-4ecd-9a24-f0bff36e3044","local_parent_id":"0fb7b784-1eb3-429a-af1d-5bd3f7c7ffcf","name":"接口调用方法说明","method":"POST","mark":"developing","is_doc":0,"target_type":"doc","status":1,"sort":1,"create_dtime":1616639819,"update_dtime":1641929076,"target_id":22493861,"create_users":{"create_user":"Sleep","update_user":"Sleep"},"request":{"url":"","description":"该方案 目前正在使用中 后期计划弃用该方案 转为开放接口由开发者自行开发 以方便提高安全系数\n\n# 接口调用方法 \n\n| 参数名 | 列示值 | 参数描述 |\n| -------- | -------- | -------- |\n| 请求Url格式 | {{host}}{{function}}?timestamp={{timestamp}}&sign={{Sign}} | 请求Url格式 |\n| {{host}} | http:\/\/127.0.0.1:8080\/ | 服务地址 |\n| {{function}} | Points   | 接口名称|\n| {{timestamp}} | 1641747305 | 时间戳 |\n| {{Sign}} | 4d9beb4020f403ac9982d7ff20498470 | 数据签名 |\n| 列示Url | http:\/\/127.0.0.1:8080\/Points?timestamp=1641812502&sign=97276a15a1d78f780197bf9d5ae92b0c | 列示Url |\n\n>  调用需要对POST请求的JSON数据进行加密操作 (详细方法参考 处理响应数据的列示方法 与 服务端自定义加解密SDK开发格式)\n>  至于 JSON编码 目前无需担心 新版本已加入自动编码识别UTF8\/GB2312无需担心\n\n```\n.版本 2\n.支持库 spec\n.支持库 dp1\n\n.程序集 Main, , , By_MF网络验证系统\n.程序集变量 集_Sign_t, 整数型, , , 盐算法-时间\n.程序集变量 集_Sign_Key, 文本型, , , 盐算法-Key\n\n.子程序 _启动子程序, 整数型, , 本子程序在程序启动后最先执行\n.局部变量 Url, 文本型\n\n集_Sign_Key ＝ “Sign_Key”  ' \/\/服务端设置\n集_Sign_t ＝ 60  ' \/\/服务端设置\nUrl ＝ “http:\/\/127.0.0.1\/” ＋ Url_ (“GetPoints”)\n调试输出 (Url)  ' \/\/* “http:\/\/127.0.0.1\/GetPoints?timestamp=1641814020&sign=3dbc21d2aec8e22198b2afa4aeee1204”\n返回 (0)  ' 可以根据您的需要返回任意数值\n\n.子程序 Url_, 文本型\n.参数 函数名称, 文本型\n.局部变量 sgin, 文本型\n\nsgin ＝ 函数名称 ＋ “?timestamp=” ＋ 到文本 (数据签名_timestamp ()) ＋ “&sign=” ＋ 数据签名_sign (到字节集 (函数名称))\n返回 (sgin)\n\n.子程序 数据签名_sign, 文本型\n.参数 需签名数据, 字节集\n.局部变量 timestamp, 长整数型\n.局部变量 sign_, 文本型\n\ntimestamp ＝ 数据签名_timestamp ()\nsign_ ＝ 取数据摘要 (到字节集 (集_Sign_Key) ＋ 到字节集 (timestamp) ＋ 需签名数据)\n返回 (sign_)\n\n.子程序 数据签名_timestamp, 长整数型\n.局部变量 timestamp, 长整数型\n\ntimestamp ＝ 到长整数 (取整 (取时间戳 () ÷ 集_sign_t) × 集_sign_t)\n返回 (timestamp)\n\n.子程序 取时间戳, 长整数型\n.局部变量 时间戳, 长整数型\n\n时间戳 ＝ 取时间间隔 (取现行时间 (), [1970年1月1日8时], #秒)\n返回 (时间戳)\n\n```\n# 响应数据处理\n> 请求后响应的信息：\n```\n{\n\t\"data\": \"eyJzdWNjZXNzIjp0cnVlLCJjb2RlIjoyMDAsIm1zZyI6Ijk1NDlEQjYyNDRGQzlE\\r\\nNzc3MEQyNUMxRkFBQkZDQUE2IiwiZGF0YSI6bnVsbH0=\\r\\n\",\n\t\"sign\": \"ee150a2b14ca1d03abdd6fd4f7d7181f\",\n\t\"timestamp\": 1641925076\n}\n```\n\n\n| 参数名 | 列示值 | 参数描述 |\n| -------- | -------- | -------- |\n| data     | eyJzdWNjZXNzIjp0cnVlLCJjb2RlIjoyMDAsIm1zZyI6Ijk1NDlEQjYyNDRGQzlE\\r\\nNzc3MEQyNUMxRkFBQkZDQUE2IiwiZGF0YSI6bnVsbH0=\\r\\n     | 响应的JSON 需要BASE解码后进行解密然后获取到正确的JSON     |\n| sign | ee150a2b14ca1d03abdd6fd4f7d7181f | 盐  |\n| timestamp | 1641925076 | 时间戳 |\n\n **sign** 和 **timestamp** 这两个参数是用于确保 **data**  信息未被修改\n \n>  易语言处理响应数据的列示方法\n ```\n.版本 2\n\n.子程序 响应数据解析, 文本型\n.参数 响应Json, 文本型\n.局部变量 zyJsonValue, zyJsonValue\n.局部变量 data, 字节集\n.局部变量 sign, 文本型\n.局部变量 timestamp, 长整数型\n.局部变量 Json, 文本型\n.局部变量 局_数据, 字节集\n\nzyJsonValue.解析 (响应Json, , , , )\ndata ＝ 到字节集 (zyJsonValue.取文本 (“data”))\nsign ＝ zyJsonValue.取文本 (“sign”)\ntimestamp ＝ zyJsonValue.取长整数 (“timestamp”)\nzyJsonValue.销毁 ()\n.如果真 (sign ≠ 数据签名_sign (data))\n    ' \/\/Error 签名错误 数据可能被修改\n    返回 (“”)\n.如果真结束\n.如果真 (timestamp ≠ 数据签名_timestamp ())\n    ' \/\/Error 签名错误 数据可能已过期\n    返回 (“”)\n.如果真结束\ndata ＝ Base64Decode (到文本 (data), )\n' \/\/这里解密 与服务端的加密 相对应 至于是对称加密还是非对称加密 看你自己怎么写的\n局_数据 ＝ 自定义解密 (取指针_字节集型 (data))\nJson ＝ 到文本 (局_数据)\n返回 (Json)\n\n\n ```\n \n# 服务端自定义加解密SDK开发格式(自定义加解密.dll)\n```\n.版本 2\n\n.子程序 自定义加密, 字节集, 公开, 加密 Encryption\n.参数 数据指针, 整数型, , 指针到字节集 (数据指针, 指针到整数 (数据指针 － 4))\n.局部变量 局_数据, 字节集\n\n局_数据 ＝ 指针到字节集 (数据指针, 指针到整数 (数据指针 － 4))\n' \/\/加解密方案 由自己编写\n返回 (局_数据)\n\n.子程序 自定义解密, 字节集, 公开, 解密 Decryption\n.参数 数据指针, 整数型, , 指针到字节集 (数据指针, 指针到整数 (数据指针 － 4))\n.局部变量 局_数据, 字节集\n\n局_数据 ＝ 指针到字节集 (数据指针, 指针到整数 (数据指针 － 4))\n' \/\/加解密方案 由自己编写\n返回 (局_数据)\n\n```\n\n# 其他\n>  下面是特别说明的 易语言独有的玩意 字节集数据 怎么获取\n```\n' \/\/这个是易语言取字节集参数或取易语言字节集返回值的方法 易语言某些地方让人蛮无语的\n局_数据 ＝ 指针到字节集 (数据指针, 指针到整数 (数据指针 － 4))\n```","auth":{"type":"noauth","kv":{"key":"","value":""},"bearer":{"key":""},"basic":{"username":"","password":""}},"body":{"mode":"json","parameter":[],"raw":"","raw_para":[]},"event":{"pre_script":"","test":""},"header":{"parameter":[]},"query":{"parameter":[]},"cookie":{"parameter":[]},"resful":{"parameter":[]}},"response":{"success":{"raw":"","parameter":[]},"error":{"raw":"","parameter":[]}}},{"local_target_id":"9c0b9b81-969d-4da8-9b47-1938c2a6c67a","local_parent_id":"0fb7b784-1eb3-429a-af1d-5bd3f7c7ffcf","name":"验证说明","method":"POST","mark":"developing","is_doc":0,"target_type":"doc","status":1,"sort":2,"create_dtime":1616639819,"update_dtime":1641928536,"target_id":22494360,"create_users":{"create_user":"Sleep","update_user":"Sleep"},"request":{"url":"","description":"什么是网络验证系统？\n可以让您的软件产品编写登录授权功能，服务端或代理端可生成制造充值卡提供给您软件的用户充值使用软件。\n让您的软件产品可以方便有效的进行网络式管理和收费授权功能、也是一款以软件安全为核心的网络验证产品。\n\n(1)服务端配套程序\n(2)客户端\/代理端\n(3)使用及防破解技术教程\n(4)易语言防破解、功能演示源码\n(5)加入交流群 https:\/\/jq.qq.com\/?_wv=1027&k=YOHWSRN1\n~~(6)技术支持~~ 免费的所以看心情\n\n \n\n网络验证有哪些防破解黑科技？\n【黑科技一】：加密算法完全独立,完美杜绝山寨方式破解\n【黑科技二】：云计算功能, 重要算法、代码、数据等支持自定义编写存放在服务器运行,实现代码分离\n【黑科技三】：独创的自定义API功能，服务端可定义编写API函数,运算数据、运算防破解，或用作动态数据返回\n【黑科技四】：优秀的自定义封包加解密功能,有效杜绝了每个开发者的加解密算法一样！杜绝无脑山寨！\n~~【黑科技】：VMP本地授权合体网络验证功能，实现了本地授权和网络验证的一体化双验证，防破解能力翻倍~~ 这个暂时还没写\n\n网络验证系统是如何绑定授权的？\n不进行任何绑定，系统完全免费且不强制更新\n\n需要作者自己租用服务器吗？\n是的,您支付的仅为验证产品，无后续费用，服务器需要作者自行租用。\n\n验证服务端需要什么样的服务器？\n服务端支持任何Windows系统作为服务器，建议使用阿里云ECS或腾讯云等服务器较为稳定快速，其价格为\n45-90元不等，或使用其他知名品牌服务器。 系统版本建议Windows Server 2008或2012或2016中文版。\n\n需要租用服务器 以及 不需要租用服务器 两类网络验证有什么区别？\n其他提供服务器类的网络验证，该种验证不需要作者租用服务器，直接用官方提供的网页后台。\n该种网络验证是收取后续费用为盈利模式，制造一个卡1元或0.5元等，并且无限产生费用，不适合高级软件作者。\n是由作者自己租用服务器，阿里云ECS服务器价格为45到68元每月左右。最低配置即可轻松在线上万客户。\n不收取费用，网络验证完全的无限制，并且后续的更换服务器也是免费的，经济实用，适合高级作者。\n\n服务器需要什么样的环境、架设简单吗？\n验证所使用的服务器不需要任何环境设置，服务端文件传至服务器运行即可。迁移服务器或备份服务器\n简单快捷，完整的拷贝自己的服务端文件夹即可完成迁移和备份操作。\n\n网络验证的代码编写简单吗？\n函数全模块化调用，并无DLL插件相关复杂的注册步骤，对于易语言作者没有一点难度。并且拥\n有完整的使用教程、源码例子和防破解教程等，让您可以在最短的时间完成验证的接入工作。\n\n另外本验证有提供接口文档 可方便用户对接其他平台\n\n有哪些验证模式？\n验证登录方式有多种： 卡模式登录(直接卡号登录) 、 用户模式(卡号作为充值卡,注册,充值,登录,绑定QQ及QQ快捷登录)。\n\n验证绑定方式有多种：绑机模式、绑号模式、扣点模式、1窗口1卡模式等可自由设定。\n\n网络验证支持DLL吗？\n支持，验证是以易语言模块方式、支持EXE和DLL调用函数进行网络\n另外本验证有提供接口文档 可方便用户对接其他平台\n\n支持验证多少个软件？\n支持多软件管理，理论支持无数个软件验证\n\n问：我如果更新怎么办？\n通常更新是更新模块和管理端的更新，直接引用和替换就行\n\n问：我的exe没有源码能加验证吗？\n可以加，有专门加验证的工具，可以给没有源码的exe或者dll加验证【该功能计划为收费功能】\n\n问：我需要准备服务器吗？会不会很难？\n需要准备的，服务器维护和购买是非常简单的，全程都有教程和技术支持的，不用担心不会购买，如果看完教程还不会，~~我会帮你远程操作搭建~~（都不会搭建还用个屁啊 非盈利产品 我没有任何义务帮你）\n\n问：卡密生成数量有限制吗？\n完全没有，无任何功能使用限制\n\n问：有没有非常厉害的防破解代码或者壳，我想多加一些！\n防破解这个概念首先要搞清，并不是说有个很厉害的检测OD的代码或者驱动保护进程这些就叫防破解了，这些的确是常见的一些手段\n\n列举一些常见的防破解手法和思路\n\n1、Md5检测：一个程序有且仅有唯一的MD5校验字符串，哪怕修改了一个字符，md5都会不一样，通常一些防破解的人就会在这里动脑筋，我吧这个坐上对比不就不被破解了吗！的确，md5无法修改，但如果用劫持补丁，md5校验就失败了，因为补丁压根就没修改你的程序，直接修改的是内存\n\n2、关键数据放到服务器，验证成功后在取回\n\n这个思路的确不错，但如果找到验证成功后取回的数据，完全是可以补数据的，简单来说就是数据是可以固定的，我甚至可以把验证干掉，然后补正常数据，然后这个exe就永久可以免费使用了\n\n \n\n3、我把核心数据动态加密返回，然后检测抓包工具，检测od，然后各种从服务器下载下来的数据做各种对比，然后加牛逼的壳，总可以了把\n\n  看似用了很多的防破解手段，其实全是做无用功，咱么一个一个来分析\n先说动态加密返回数据，的确这个加密没办法让破解的人直接解密，但破解的可以把你的密码固定，甚至都不用知道明文是什么，直接补密文\n\n再来看检测抓包、OD之类的操作，这个没问题，这个能很大程度抵挡住小宝，但有一种版本叫内部使用版本、DIY版本、无特征版本、非公开版本，不多说了，检测不到的\n\n接下来数据对比，这个思路是没错的，如果说单纯的为了对比是否和本地的一样，直接一个jmp 跳过，没有一点用，但如果用到隐蔽的地方，是没问题的，思路一定要隐蔽\n\n \n\n最后说加壳，加壳的目的是为了让破解者分析起来难一些，并不是说加上壳就没办法破解了，完全可以带壳破解，原理大致是程序运行要解码，直接修改内存\n\n以上总结并不是说否定上面的防破解手法，而是通常情况大多数人都是这么一个思路，也只是着一些手法，这样基本是无用功，我以破解者的角度来分析，让大家少走弯路\n\n \n\n接下来我把有效的思路给大家讲解下\n核心数据、或者数据处理运算代码云端化\n\n大概思路就是把你源码的核心数据通过服务器实时请求下发，达到核心防破解的效果（我说的核心并不是单纯的把文本放到服务器中，那这个就没什么价值了）个人版可以通过观看教程，自己可以汇总一些比较重要的，通过云.Dll源码来编写，定制版、企业版的用户会有一个我专门编写的防破解的一个框架，我已经做了几个月的完善和测试，处理数据和实际使用都非常高效稳定。","auth":{"type":"noauth","kv":{"key":"","value":""},"bearer":{"key":""},"basic":{"username":"","password":""}},"body":{"mode":"json","parameter":[],"raw":"","raw_para":[]},"event":{"pre_script":"","test":""},"header":{"parameter":[]},"query":{"parameter":[]},"cookie":{"parameter":[]},"resful":{"parameter":[]}},"response":{"success":{"raw":"","parameter":[]},"error":{"raw":"","parameter":[]}}}]},{"local_target_id":"4494d08b-53cc-40a8-af67-ac5a5d12a3f1","local_parent_id":"0","name":"单卡接口","method":"POST","mark":"developing","is_doc":0,"target_type":"folder","status":1,"sort":1,"create_dtime":1616639819,"update_dtime":1641728583,"target_id":22453254,"create_users":{"create_user":"Sleep","update_user":"Sleep"},"request":{"description":"","header":[],"query":[],"body":[],"auth":[]},"script":{"pre_script":"","test":""},"children":[{"local_target_id":"c5f697a9-7e44-4bd9-be2e-46046cbc8591","local_parent_id":"4494d08b-53cc-40a8-af67-ac5a5d12a3f1","name":"SingleLogin|卡密登录","method":"POST","mark":"complated","is_doc":0,"target_type":"api","status":1,"sort":1,"create_dtime":1616639819,"update_dtime":1641811758,"target_id":22453255,"create_users":{"create_user":"Sleep","update_user":"Sleep"},"request":{"url":"http:\/\/127.0.0.1:8080\/SingleLogin","description":"单卡登录","auth":{"type":"noauth","kv":{"key":"","value":""},"bearer":{"key":""},"basic":{"username":"","password":""}},"body":{"mode":"json","parameter":[],"raw":"{\n    \"SingleCode\": \"CSK-BAC8518C5D6EDB23B684DD3F4C08\",\n    \"Mac\": 1960979373,\n    \"Version\": 1,\n    \"Software\": \"通用\",\n    \"processID\": 2012,\n    \"SystemTime\": 3999648,\n    \"timestamp\": 1641727758\n}","raw_para":[{"description":"单卡卡密","is_checked":1,"key":"SingleCode","type":"Text","not_null":"1","field_type":"String","value":"CSK-BAC8518C5D6EDB23B684DD3F4C08"},{"description":"机器码","is_checked":1,"key":"Mac","type":"Text","not_null":"1","field_type":"Number","value":"1960979373"},{"description":"客户端版本","is_checked":1,"key":"Version","type":"Text","not_null":"1","field_type":"Number","value":"1"},{"description":"客户端软件名称","is_checked":1,"key":"Software","type":"Text","not_null":"1","field_type":"String","value":"通用"},{"description":"客户端PID","is_checked":1,"key":"processID","type":"Text","not_null":"1","field_type":"Number","value":"2012"},{"description":"客户端系统时间","is_checked":1,"key":"SystemTime","type":"Text","not_null":"1","field_type":"Number","value":"3999648"},{"description":"当前时间戳","is_checked":1,"key":"timestamp","type":"Text","not_null":"1","field_type":"Number","value":"1641727758"}]},"event":{"pre_script":"","test":""},"header":{"parameter":[]},"query":{"parameter":[]},"cookie":{"parameter":[]},"resful":{"parameter":[]},"url_var":"http:\/\/127.0.0.1:8080\/SingleLogin"},"response":{"success":{"raw":"{\n\t\"success\": true,\n\t\"code\": 200,\n\t\"msg\": \"登录成功\",\n\t\"data\": {\n\t\t\"登录次数\": 25,\n\t\t\"附属性\": \"正版\",\n\t\t\"剩余时间\": 30229298,\n\t\t\"到期时间\": \"2022-12-25 16:33:11\",\n\t\t\"卡号\": \"CSK-BAC8518C5D6EDB23B684DD3F4C08\",\n\t\t\"卡类型\": \"测试卡\",\n\t\t\"机器码\": \"1960979373\",\n\t\t\"备注\": \"无\",\n\t\t\"在线ip\": \"127.0.0.1\",\n\t\t\"IP所在地\": \"【[查询接口]等待更新完善】\",\n\t\t\"登录时间\": \"2022-01-09 19:31:33\",\n\t\t\"点数\": 0,\n\t\t\"绑定台数\": 0,\n\t\t\"销售员\": \"老板号1\"\n\t}\n}","parameter":[]},"error":{"raw":"","parameter":[]}}}]},{"local_target_id":"26f00627-d08e-4933-be87-52798d307fcf","local_parent_id":"0","name":"用户接口","method":"POST","mark":"developing","is_doc":0,"target_type":"folder","status":1,"sort":2,"create_dtime":1616639819,"update_dtime":1641728449,"target_id":22453262,"create_users":{"create_user":"Sleep","update_user":"Sleep"},"request":{"description":"","header":[],"query":[],"body":[],"auth":[]},"script":{"pre_script":"","test":""},"children":[{"local_target_id":"3d1c4343-4392-43e9-bdcc-7e161773fc4f","local_parent_id":"26f00627-d08e-4933-be87-52798d307fcf","name":"UserLogin|用户登录","method":"POST","mark":"complated","is_doc":0,"target_type":"api","status":1,"sort":1,"create_dtime":1616639819,"update_dtime":1641730524,"target_id":22453373,"create_users":{"create_user":"Sleep","update_user":"Sleep"},"request":{"url":"http:\/\/127.0.0.1:8080\/UserLogin","description":"","auth":{"type":"noauth","kv":{"key":"","value":""},"bearer":{"key":""},"basic":{"username":"","password":""}},"body":{"mode":"json","parameter":[],"raw":"{\n    \"UserName\": \"admin12311\",\n    \"UserPwd\": \"admin321\",\n    \"Mac\": 1960979373,\n    \"Version\": 1,\n    \"Software\": \"通用\",\n    \"processID\": 21692,\n    \"SystemTime\": 6356642,\n    \"timestamp\": 1641730112\n}","raw_para":[{"description":"用户名","is_checked":1,"key":"UserName","type":"Text","not_null":"1","field_type":"String","value":"admin12311"},{"description":"密码","is_checked":1,"key":"UserPwd","type":"Text","not_null":"1","field_type":"String","value":"admin321"},{"description":"机器码","is_checked":1,"key":"Mac","type":"Text","not_null":"1","field_type":"Number","value":"1960979373"},{"description":"客户端版本","is_checked":1,"key":"Version","type":"Text","not_null":"1","field_type":"Number","value":"1"},{"description":"客户端软件名称","is_checked":1,"key":"Software","type":"Text","not_null":"1","field_type":"String","value":"通用"},{"description":"客户端PID","is_checked":1,"key":"processID","type":"Text","not_null":"1","field_type":"Number","value":"21692"},{"description":"客户端系统时间","is_checked":1,"key":"SystemTime","type":"Text","not_null":"1","field_type":"Number","value":"6356642"},{"description":"当前时间戳","is_checked":1,"key":"timestamp","type":"Text","not_null":"1","field_type":"Number","value":"1641730112"}]},"event":{"pre_script":"","test":""},"header":{"parameter":[]},"query":{"parameter":[]},"cookie":{"parameter":[]},"resful":{"parameter":[]},"url_var":"http:\/\/127.0.0.1:8080\/UserLogin"},"response":{"success":{"raw":"{\n\t\"success\": true,\n\t\"code\": 200,\n\t\"msg\": \"登录成功\",\n\t\"data\": {\n\t\t\"登录次数\": 5,\n\t\t\"附属性\": \"正版\",\n\t\t\"剩余时间\": 30246764,\n\t\t\"到期时间\": \"2022-12-25 22:01:23\",\n\t\t\"卡号\": \"CSK-315A9DD2678CEB23AA9C19AA9BB4\",\n\t\t\"卡类型\": \"测试卡\",\n\t\t\"机器码\": \"1960979373\",\n\t\t\"备注\": \"无\",\n\t\t\"在线ip\": \"127.0.0.1\",\n\t\t\"IP所在地\": \"【[查询接口]等待更新完善】\",\n\t\t\"登录时间\": \"2022-01-09 20:08:39\",\n\t\t\"点数\": 0,\n\t\t\"绑定台数\": 0,\n\t\t\"销售员\": \"老板号\"\n\t}\n}","parameter":[]},"error":{"raw":"","parameter":[]}}}]},{"local_target_id":"e6a4be94-7b78-4767-bd60-d1d78d93dc2b","local_parent_id":"0","name":"代理接口","method":"POST","mark":"developing","is_doc":0,"target_type":"folder","status":1,"sort":3,"create_dtime":1616639819,"update_dtime":1641728494,"target_id":22453267,"create_users":{"create_user":"Sleep","update_user":"Sleep"},"request":{"description":"","header":[],"query":[],"body":[],"auth":[]},"script":{"pre_script":"","test":""},"children":[{"local_target_id":"776e4b69-b2be-471d-926e-e729ef64bc35","local_parent_id":"e6a4be94-7b78-4767-bd60-d1d78d93dc2b","name":"GetManageInfo|销售员信息","method":"POST","mark":"complated","is_doc":0,"target_type":"api","status":1,"sort":0,"create_dtime":1616639819,"update_dtime":1641937961,"target_id":22555171,"create_users":{"create_user":"Sleep","update_user":"Sleep"},"request":{"url":"http:\/\/127.0.0.1:8080\/GetManageInfo","description":"","auth":{"type":"noauth","kv":{"key":"","value":""},"bearer":{"key":""},"basic":{"username":"","password":""}},"body":{"mode":"json","parameter":[],"raw":"{\n    \"UserName\": \"代理号\",\n    \"UserPwd\": \"125156\",\n    \"Mac\": 1960979373,\n    \"Version\": 1,\n    \"Software\": \"通用\",\n    \"processID\": 972,\n    \"SystemTime\": 15885346,\n    \"timestamp\": 1641937363\n}","raw_para":[{"description":"销售员账号","is_checked":1,"key":"UserName","type":"Text","not_null":"1","field_type":"String","value":"代理号"},{"description":"销售员密码","is_checked":1,"key":"UserPwd","type":"Text","not_null":"1","field_type":"Number","value":"125156"},{"description":"机器码","is_checked":1,"key":"Mac","type":"Text","not_null":"1","field_type":"Number","value":"1960979373"},{"description":"客户端版本","is_checked":1,"key":"Version","type":"Text","not_null":"1","field_type":"Number","value":"1"},{"description":"软件名称","is_checked":1,"key":"Software","type":"Text","not_null":"1","field_type":"String","value":"通用"},{"description":"客户端PID","is_checked":1,"key":"processID","type":"Text","not_null":"1","field_type":"Number","value":"972"},{"description":"客户端系统时间","is_checked":1,"key":"SystemTime","type":"Text","not_null":"1","field_type":"Number","value":"15885346"},{"description":"当前时间戳","is_checked":1,"key":"timestamp","type":"Text","not_null":"1","field_type":"Number","value":"1641937363"}]},"event":{"pre_script":"","test":""},"header":{"parameter":[]},"query":{"parameter":[]},"cookie":{"parameter":[]},"resful":{"parameter":[]},"url_var":"http:\/\/127.0.0.1:8080\/GetManageInfo"},"response":{"success":{"raw":"{\n\t\"success\": true,\n\t\"code\": 200,\n\t\"msg\": \"1\",\n\t\"data\": {\n\t\t\"sum\": 1259011,\n\t\t\"level\": \"1\"\n\t}\n}","parameter":[]},"error":{"raw":"","parameter":[]}}},{"local_target_id":"a858eca4-7484-470a-b897-a644a707efd4","local_parent_id":"e6a4be94-7b78-4767-bd60-d1d78d93dc2b","name":"AllowCardType|读开卡类型","method":"POST","mark":"complated","is_doc":0,"target_type":"api","status":1,"sort":1,"create_dtime":1616639819,"update_dtime":1641938001,"target_id":22555172,"create_users":{"create_user":"Sleep","update_user":"Sleep"},"request":{"url":"http:\/\/127.0.0.1:8080\/AllowCardType","description":"","auth":{"type":"noauth","kv":{"key":"","value":""},"bearer":{"key":""},"basic":{"username":"","password":""}},"body":{"mode":"json","parameter":[],"raw":"{\n    \"UserName\": \"代理号\",\n    \"UserPwd\": \"125156\",\n    \"Mac\": 1960979373,\n    \"Version\": 1,\n    \"Software\": \"通用\",\n    \"processID\": 972,\n    \"SystemTime\": 15885346,\n    \"timestamp\": 1641937363\n}","raw_para":[{"description":"销售员账号","is_checked":1,"key":"UserName","type":"Text","not_null":"1","field_type":"String","value":"代理号"},{"description":"销售员密码","is_checked":1,"key":"UserPwd","type":"Text","not_null":"1","field_type":"Number","value":"125156"},{"description":"机器码","is_checked":1,"key":"Mac","type":"Text","not_null":"1","field_type":"Number","value":"1960979373"},{"description":"客户端版本","is_checked":1,"key":"Version","type":"Text","not_null":"1","field_type":"Number","value":"1"},{"description":"软件名称","is_checked":1,"key":"Software","type":"Text","not_null":"1","field_type":"String","value":"通用"},{"description":"客户端PID","is_checked":1,"key":"processID","type":"Text","not_null":"1","field_type":"Number","value":"972"},{"description":"客户端系统时间","is_checked":1,"key":"SystemTime","type":"Text","not_null":"1","field_type":"Number","value":"15885346"},{"description":"当前时间戳","is_checked":1,"key":"timestamp","type":"Text","not_null":"1","field_type":"Number","value":"1641937363"}]},"event":{"pre_script":"","test":""},"header":{"parameter":[]},"query":{"parameter":[]},"cookie":{"parameter":[]},"resful":{"parameter":[]},"url_var":"http:\/\/127.0.0.1:8080\/AllowCardType"},"response":{"success":{"raw":"{\n\t\"success\": true,\n\t\"code\": 200,\n\t\"msg\": \"月卡,单价:300|周卡,单价:100|天卡,单价:20|网络验证月卡,单价:300|\",\n\t\"data\": {\n\t\t\"value\": \"月卡,单价:300|周卡,单价:100|天卡,单价:20|网络验证月卡,单价:300|\"\n\t}\n}","parameter":[]},"error":{"raw":"","parameter":[]}}},{"local_target_id":"2ad16f63-8b96-414e-b6e6-bcda29f2a65c","local_parent_id":"e6a4be94-7b78-4767-bd60-d1d78d93dc2b","name":"GetManageSum|销售员余额查询","method":"POST","mark":"complated","is_doc":0,"target_type":"api","status":1,"sort":2,"create_dtime":1616639819,"update_dtime":1641938125,"target_id":22555173,"create_users":{"create_user":"Sleep","update_user":"Sleep"},"request":{"url":"http:\/\/127.0.0.1:8080\/GetManageSum","description":"","auth":{"type":"noauth","kv":{"key":"","value":""},"bearer":{"key":""},"basic":{"username":"","password":""}},"body":{"mode":"json","parameter":[],"raw":"{\n    \"UserName\": \"代理号\",\n    \"Mac\": 1960979373,\n    \"Version\": 1,\n    \"Software\": \"通用\",\n    \"processID\": 972,\n    \"SystemTime\": 15885346,\n    \"timestamp\": 1641937363\n}","raw_para":[{"description":"销售员账号","is_checked":1,"key":"UserName","type":"Text","not_null":"1","field_type":"String","value":"代理号"},{"description":"机器码","is_checked":1,"key":"Mac","type":"Text","not_null":"1","field_type":"Number","value":"1960979373"},{"description":"客户端版本","is_checked":1,"key":"Version","type":"Text","not_null":"1","field_type":"Number","value":"1"},{"description":"软件名称","is_checked":1,"key":"Software","type":"Text","not_null":"1","field_type":"String","value":"通用"},{"description":"客户端PID","is_checked":1,"key":"processID","type":"Text","not_null":"1","field_type":"Number","value":"972"},{"description":"客户端系统时间","is_checked":1,"key":"SystemTime","type":"Text","not_null":"1","field_type":"Number","value":"15885346"},{"description":"当前时间戳","is_checked":1,"key":"timestamp","type":"Text","not_null":"1","field_type":"Number","value":"1641937363"}]},"event":{"pre_script":"","test":""},"header":{"parameter":[]},"query":{"parameter":[]},"cookie":{"parameter":[]},"resful":{"parameter":[]},"url_var":"http:\/\/127.0.0.1:8080\/GetManageSum"},"response":{"success":{"raw":"{\n\t\"success\": true,\n\t\"code\": 200,\n\t\"msg\": \"1259011\",\n\t\"data\": {\n\t\t\"sum\": 1259011\n\t}\n}","parameter":[]},"error":{"raw":"","parameter":[]}}},{"local_target_id":"0bc1cc88-25b3-4b7a-86ea-56783f1652b6","local_parent_id":"e6a4be94-7b78-4767-bd60-d1d78d93dc2b","name":"CreateCard|卡号生成","method":"POST","mark":"complated","is_doc":0,"target_type":"api","status":1,"sort":3,"create_dtime":1616639819,"update_dtime":1641995661,"target_id":22555174,"create_users":{"create_user":"Sleep","update_user":"Sleep"},"request":{"url":"http:\/\/127.0.0.1:8080\/CreateCard","description":"目前响应接口的 data 有问题 具体以 msg 为主","auth":{"type":"noauth","kv":{"key":"","value":""},"bearer":{"key":""},"basic":{"username":"","password":""}},"body":{"mode":"json","parameter":[],"raw":"{\n    \"UserName\": \"代理号\",\n    \"UserPwd\": \"125156\",\n    \"CardType\": \"月卡\",\n    \"Num\": 1,\n    \"Note\": \"\",\n    \"Mac\": 1960979373,\n    \"Version\": 1,\n    \"Software\": \"通用\",\n    \"processID\": 20656,\n    \"SystemTime\": 33229753,\n    \"timestamp\": 0\n}","raw_para":[{"description":"销售员账号","is_checked":1,"key":"UserName","type":"Text","not_null":"1","field_type":"String","value":"代理号"},{"description":"销售员密码","is_checked":1,"key":"UserPwd","type":"Text","not_null":"1","field_type":"Number","value":"125156"},{"description":"生成的卡类型","is_checked":1,"key":"CardType","type":"Text","not_null":"1","field_type":"String","value":"月卡"},{"description":"生成的数量","is_checked":1,"key":"Num","type":"Text","not_null":"1","field_type":"Number","value":"1"},{"description":"生成的卡备注","is_checked":1,"key":"Note","type":"Text","not_null":"-1","field_type":"String","value":""},{"description":"机器码","is_checked":1,"key":"Mac","type":"Text","not_null":"1","field_type":"Number","value":"1960979373"},{"description":"客户端版本","is_checked":1,"key":"Version","type":"Text","not_null":"1","field_type":"Number","value":"1"},{"description":"软件名称","is_checked":1,"key":"Software","type":"Text","not_null":"1","field_type":"String","value":"通用"},{"description":"客户端PID","is_checked":1,"key":"processID","type":"Text","not_null":"1","field_type":"Number","value":"20656"},{"description":"客户端系统时间","is_checked":1,"key":"SystemTime","type":"Text","not_null":"1","field_type":"Number","value":"33229753"},{"description":"当前时间戳","is_checked":1,"key":"timestamp","type":"Text","not_null":"1","field_type":"Number","value":"0"}]},"event":{"pre_script":"","test":""},"header":{"parameter":[]},"query":{"parameter":[]},"cookie":{"parameter":[]},"resful":{"parameter":[]},"url_var":"http:\/\/127.0.0.1:8080\/CreateCard"},"response":{"success":{"raw":"{\n\t\"success\": true,\n\t\"code\": 200,\n\t\"msg\": \"销售员：代理号\\r\\n卡类型：月卡\\r\\n单价：300\\r\\n生成日期：2022年1月12日21时53分19秒\\r\\n数量：1\\r\\n扣除余额：300\\r\\n总共已消费：0\\r\\n剩余金额：1259011\\r\\n====================================\\r\\nYKADFFB222900F631D49289C0F7B9648\\r\\n\",\n\t\"data\": {\n\t\t\"value\": \"销售员：代理号\\r\\n卡类型：月卡\\r\\n单价：300\\r\\n生成日期：2022年1月12日21时53分19秒\\r\\n数量：1\\r\\n扣除余额：300\\r\\n总共已消费：0\\r\\n剩余金额：1259011\\r\\n====================================\\r\\nYKADFFB222900F631D49289C0F7B9648\\r\\n\"\n\t}\n}","parameter":[]},"error":{"raw":"","parameter":[]}}},{"local_target_id":"a7d173d4-f755-49d9-b2b9-52ab31b40e78","local_parent_id":"e6a4be94-7b78-4767-bd60-d1d78d93dc2b","name":"ManageRecharge|销售员余额充值","method":"POST","mark":"complated","is_doc":0,"target_type":"api","status":1,"sort":4,"create_dtime":1616639819,"update_dtime":1641955069,"target_id":22555175,"create_users":{"create_user":"Sleep","update_user":"Sleep"},"request":{"url":"http:\/\/127.0.0.1:8080\/GetManageInfo","description":"","auth":{"type":"noauth","kv":{"key":"","value":""},"bearer":{"key":""},"basic":{"username":"","password":""}},"body":{"mode":"json","parameter":[],"raw":"{\n    \"UserName\": \"代理号\",\n    \"CardPwd\": \"YKC9F8D224A53387D5069D6F1FAAA96E\",\n    \"Mac\": 1960979373,\n    \"Version\": 1,\n    \"Software\": \"通用\",\n    \"processID\": 972,\n    \"SystemTime\": 15885346,\n    \"timestamp\": 1641937363\n}","raw_para":[{"description":"销售员账号","is_checked":1,"key":"UserName","type":"Text","not_null":"1","field_type":"String","value":"代理号"},{"description":"余额卡","is_checked":1,"key":"CardPwd","type":"Text","not_null":"1","field_type":"String","value":"YKC9F8D224A53387D5069D6F1FAAA96E"},{"description":"机器码","is_checked":1,"key":"Mac","type":"Text","not_null":"1","field_type":"Number","value":"1960979373"},{"description":"客户端版本","is_checked":1,"key":"Version","type":"Text","not_null":"1","field_type":"Number","value":"1"},{"description":"软件名称","is_checked":1,"key":"Software","type":"Text","not_null":"1","field_type":"String","value":"通用"},{"description":"客户端PID","is_checked":1,"key":"processID","type":"Text","not_null":"1","field_type":"Number","value":"972"},{"description":"客户端系统时间","is_checked":1,"key":"SystemTime","type":"Text","not_null":"1","field_type":"Number","value":"15885346"},{"description":"当前时间戳","is_checked":1,"key":"timestamp","type":"Text","not_null":"1","field_type":"Number","value":"1641937363"}]},"event":{"pre_script":"","test":""},"header":{"parameter":[]},"query":{"parameter":[]},"cookie":{"parameter":[]},"resful":{"parameter":[]},"url_var":"http:\/\/127.0.0.1:8080\/GetManageInfo"},"response":{"success":{"raw":"{\n\t\"success\": true,\n\t\"code\": 200,\n\t\"msg\": \"1\",\n\t\"data\": null\n}","parameter":[]},"error":{"raw":"","parameter":[]}}}]},{"local_target_id":"e16d47ff-8ba2-4f96-b9e3-232795614726","local_parent_id":"0","name":"云计算接口","method":"POST","mark":"developing","is_doc":0,"target_type":"folder","status":1,"sort":5,"create_dtime":1616639819,"update_dtime":1641728465,"target_id":22453263,"create_users":{"create_user":"Sleep","update_user":"Sleep"},"request":{"description":"本函数可以实现作者自己定义的一切功能、一切返回值、算法等。最大化的增加了作者对验证的功能自由，也实现程序功能服务器来运行的目的。","header":[],"query":[],"body":[],"auth":[]},"script":{"pre_script":"","test":""},"children":[{"local_target_id":"a8f0f0a4-d20a-4881-a0bf-eea6d35cb9ae","local_parent_id":"e16d47ff-8ba2-4f96-b9e3-232795614726","name":"Cloud|云计算","method":"POST","mark":"complated","is_doc":0,"target_type":"api","status":1,"sort":1,"create_dtime":1616639819,"update_dtime":1641811752,"target_id":22453418,"create_users":{"create_user":"Sleep","update_user":"Sleep"},"request":{"url":"http:\/\/127.0.0.1:8080\/Cloud","description":"","auth":{"type":"noauth","kv":{"key":"","value":""},"bearer":{"key":""},"basic":{"username":"","password":""}},"body":{"mode":"json","parameter":[],"raw":"{\n    \"UserName\": \"admin12311\",\n    \"UserPwd\": \"admin321\",\n    \"LoginMethod\": true,\n    \"Command\": \"取服务器时间\",\n    \"Mac\": 1960979373,\n    \"Version\": 1,\n    \"Software\": \"通用\",\n    \"processID\": 24440,\n    \"SystemTime\": 7080123,\n    \"timestamp\": 1641730838\n}","raw_para":[{"description":"用户名","is_checked":1,"key":"UserName","type":"Text","not_null":"1","field_type":"String","value":"admin12311"},{"description":"密码","is_checked":1,"key":"UserPwd","type":"Text","not_null":"1","field_type":"String","value":"admin321"},{"description":"登录方式","is_checked":1,"key":"LoginMethod","type":"Text","not_null":"1","field_type":"","value":"true"},{"description":"云计算指令","is_checked":1,"key":"Command","type":"Text","not_null":"1","field_type":"String","value":"取服务器时间"},{"description":"机器码","is_checked":1,"key":"Mac","type":"Text","not_null":"1","field_type":"Number","value":"1960979373"},{"description":"客户端版本","is_checked":1,"key":"Version","type":"Text","not_null":"1","field_type":"Number","value":"1"},{"description":"客户端软件名称","is_checked":1,"key":"Software","type":"Text","not_null":"1","field_type":"String","value":"通用"},{"description":"客户端PID","is_checked":1,"key":"processID","type":"Text","not_null":"1","field_type":"Number","value":"24440"},{"description":"客户端系统时间","is_checked":1,"key":"SystemTime","type":"Text","not_null":"1","field_type":"Number","value":"7080123"},{"description":"当前时间戳","is_checked":1,"key":"timestamp","type":"Text","not_null":"1","field_type":"Number","value":"1641730838"}]},"event":{"pre_script":"","test":""},"header":{"parameter":[]},"query":{"parameter":[]},"cookie":{"parameter":[]},"resful":{"parameter":[]},"url_var":"http:\/\/127.0.0.1:8080\/Cloud"},"response":{"success":{"raw":"{\n\t\"success\": true,\n\t\"code\": 200,\n\t\"msg\": \"2022年1月10日0时32分49秒\",\n\t\"data\": {\n\t\t\"value\": \"2022年1月10日0时32分49秒\"\n\t}\n}","parameter":[]},"error":{"raw":"","parameter":[]}}},{"local_target_id":"754a6a90-4bea-4e0a-b88a-cf9459b67048","local_parent_id":"e16d47ff-8ba2-4f96-b9e3-232795614726","name":"Cloud|2云计算2","method":"POST","mark":"complated","is_doc":0,"target_type":"api","status":1,"sort":2,"create_dtime":1616639819,"update_dtime":1641811746,"target_id":22453447,"create_users":{"create_user":"Sleep","update_user":"Sleep"},"request":{"url":"http:\/\/127.0.0.1:8080\/Cloud2","description":"","auth":{"type":"noauth","kv":{"key":"","value":""},"bearer":{"key":""},"basic":{"username":"","password":""}},"body":{"mode":"json","parameter":[],"raw":"{\n    \"UserName\": \"admin12311\",\n    \"UserPwd\": \"admin321\",\n    \"LoginMethod\": true,\n    \"Command\": \"C8A1B7FECEF1C6F7CAB1BCE4\",\n    \"Mac\": 1960979373,\n    \"Version\": 1,\n    \"Software\": \"通用\",\n    \"processID\": 11788,\n    \"SystemTime\": 7546352,\n    \"timestamp\": 1641731300\n}","raw_para":[{"description":"用户名","is_checked":1,"key":"UserName","type":"Text","not_null":"1","field_type":"String","value":"admin12311"},{"description":"密码","is_checked":1,"key":"UserPwd","type":"Text","not_null":"1","field_type":"String","value":"admin321"},{"description":"登录方式","is_checked":1,"key":"LoginMethod","type":"Text","not_null":"1","field_type":"","value":"true"},{"description":"云计算指令","is_checked":1,"key":"Command","type":"Text","not_null":"1","field_type":"String","value":"C8A1B7FECEF1C6F7CAB1BCE4"},{"description":"机器码","is_checked":1,"key":"Mac","type":"Text","not_null":"1","field_type":"Number","value":"1960979373"},{"description":"客户端版本","is_checked":1,"key":"Version","type":"Text","not_null":"1","field_type":"Number","value":"1"},{"description":"客户端软件名称","is_checked":1,"key":"Software","type":"Text","not_null":"1","field_type":"String","value":"通用"},{"description":"客户端PID","is_checked":1,"key":"processID","type":"Text","not_null":"1","field_type":"Number","value":"11788"},{"description":"客户端系统时间","is_checked":1,"key":"SystemTime","type":"Text","not_null":"1","field_type":"Number","value":"7546352"},{"description":"当前时间戳","is_checked":1,"key":"timestamp","type":"Text","not_null":"1","field_type":"Number","value":"1641731300"}]},"event":{"pre_script":"","test":""},"header":{"parameter":[]},"query":{"parameter":[]},"cookie":{"parameter":[]},"resful":{"parameter":[]},"url_var":"http:\/\/127.0.0.1:8080\/Cloud2"},"response":{"success":{"raw":"{\n\t\"success\": true,\n\t\"code\": 200,\n\t\"msg\": \"MjAyMsTqMdTCMTDI1TDKsTMyt9Y0OcPr\",\n\t\"data\": {\n\t\t\"value\": \"MjAyMsTqMdTCMTDI1TDKsTMyt9Y0OcPr\"\n\t}\n}","parameter":[]},"error":{"raw":"","parameter":[]}}},{"local_target_id":"bab32045-153a-49ab-bf0f-2f9521a564ae","local_parent_id":"e16d47ff-8ba2-4f96-b9e3-232795614726","name":"Cloud3|云计算3","method":"POST","mark":"complated","is_doc":0,"target_type":"api","status":1,"sort":3,"create_dtime":1616639819,"update_dtime":1641811743,"target_id":22453448,"create_users":{"create_user":"Sleep","update_user":"Sleep"},"request":{"url":"http:\/\/127.0.0.1:8080\/Cloud3","description":"注意！！本接口是登录前的云计算接口","auth":{"type":"noauth","kv":{"key":"","value":""},"bearer":{"key":""},"basic":{"username":"","password":""}},"body":{"mode":"json","parameter":[],"raw":"{\n    \"Command\": \"C8A1B7FECEF1C6F7CAB1BCE4\",\n    \"Mac\": 1960979373,\n    \"Version\": 1,\n    \"Software\": \"通用\",\n    \"processID\": 19952,\n    \"SystemTime\": 7574296,\n    \"timestamp\": 1641731333\n}","raw_para":[{"description":"云计算指令","is_checked":1,"key":"Command","type":"Text","not_null":"1","field_type":"String","value":"C8A1B7FECEF1C6F7CAB1BCE4"},{"description":"机器码","is_checked":1,"key":"Mac","type":"Text","not_null":"1","field_type":"Number","value":"1960979373"},{"description":"客户端版本","is_checked":1,"key":"Version","type":"Text","not_null":"1","field_type":"Number","value":"1"},{"description":"客户端软件名称","is_checked":1,"key":"Software","type":"Text","not_null":"1","field_type":"String","value":"通用"},{"description":"客户端PID","is_checked":1,"key":"processID","type":"Text","not_null":"1","field_type":"Number","value":"19952"},{"description":"客户端系统时间","is_checked":1,"key":"SystemTime","type":"Text","not_null":"1","field_type":"Number","value":"7574296"},{"description":"当前时间戳","is_checked":1,"key":"timestamp","type":"Text","not_null":"1","field_type":"Number","value":"1641731333"}]},"event":{"pre_script":"","test":""},"header":{"parameter":[]},"query":{"parameter":[]},"cookie":{"parameter":[]},"resful":{"parameter":[]},"url_var":"http:\/\/127.0.0.1:8080\/Cloud3"},"response":{"success":{"raw":"{\n\t\"success\": true,\n\t\"code\": 200,\n\t\"msg\": \"MjAyMsTqMdTCMTDI1TDKsTMyt9Y0OcPr\",\n\t\"data\": {\n\t\t\"value\": \"MjAyMsTqMdTCMTDI1TDKsTMyt9Y0OcPr\"\n\t}\n}","parameter":[]},"error":{"raw":"","parameter":[]}}}]},{"local_target_id":"04dc2c1c-5bba-4135-ab89-cf6c9782b50c","local_parent_id":"0","name":"远程操作接口","method":"POST","mark":"developing","is_doc":0,"target_type":"folder","status":1,"sort":6,"create_dtime":1616639819,"update_dtime":1641728477,"target_id":22453264,"create_users":{"create_user":"Sleep","update_user":"Sleep"},"request":{"description":"","header":[],"query":[],"body":[],"auth":[]},"script":{"pre_script":"","test":""},"children":[{"local_target_id":"5d64cfc1-cae9-47a1-a160-ae56b158eb52","local_parent_id":"04dc2c1c-5bba-4135-ab89-cf6c9782b50c","name":"GetVariable|远程变量","method":"POST","mark":"complated","is_doc":0,"target_type":"api","status":1,"sort":1,"create_dtime":1616639819,"update_dtime":1641811703,"target_id":22453493,"create_users":{"create_user":"Sleep","update_user":"Sleep"},"request":{"url":"http:\/\/127.0.0.1:8080\/GetVariable","description":"","auth":{"type":"noauth","kv":{"key":"","value":""},"bearer":{"key":""},"basic":{"username":"","password":""}},"body":{"mode":"json","parameter":[],"raw":"{\n\t\"UserName\": \"admin12311\",\n\t\"UserPwd\": \"admin321\",\n\t\"LoginMethod\": true,\n\t\"VariableName\": \"Hello\",\n\t\"Mac\": 1960979373,\n\t\"Version\": 1,\n\t\"Software\": \"通用\",\n\t\"processID\": 2700,\n\t\"SystemTime\": 7896347,\n\t\"timestamp\": 1641731652\n}","raw_para":[{"description":"用户名","is_checked":1,"key":"UserName","type":"Text","not_null":"1","field_type":"String","value":"admin12311"},{"description":"密码","is_checked":1,"key":"UserPwd","type":"Text","not_null":"1","field_type":"String","value":"admin321"},{"description":"登录方式","is_checked":1,"key":"LoginMethod","type":"Text","not_null":"1","field_type":"","value":"true"},{"description":"变量名","is_checked":1,"key":"VariableName","type":"Text","not_null":"1","field_type":"String","value":"Hello"},{"description":"机器码","is_checked":1,"key":"Mac","type":"Text","not_null":"1","field_type":"Number","value":"1960979373"},{"description":"客户端版本","is_checked":1,"key":"Version","type":"Text","not_null":"1","field_type":"Number","value":"1"},{"description":"客户端软件名称","is_checked":1,"key":"Software","type":"Text","not_null":"1","field_type":"String","value":"通用"},{"description":"客户端PID","is_checked":1,"key":"processID","type":"Text","not_null":"1","field_type":"Number","value":"2700"},{"description":"客户端系统时间","is_checked":1,"key":"SystemTime","type":"Text","not_null":"1","field_type":"Number","value":"7896347"},{"description":"当前时间戳","is_checked":1,"key":"timestamp","type":"Text","not_null":"1","field_type":"Number","value":"1641731652"}]},"event":{"pre_script":"","test":""},"header":{"parameter":[]},"query":{"parameter":[]},"cookie":{"parameter":[]},"resful":{"parameter":[]},"url_var":"http:\/\/127.0.0.1:8080\/GetVariable"},"response":{"success":{"raw":"{\n\t\"success\": true,\n\t\"code\": 200,\n\t\"msg\": \"Hello World！\",\n\t\"data\": {\n\t\t\"value\": \"Hello World！\"\n\t}\n}","parameter":[]},"error":{"raw":"","parameter":[]}}},{"local_target_id":"84e3ffd5-f41b-417a-82ec-3cfa406ad07e","local_parent_id":"04dc2c1c-5bba-4135-ab89-cf6c9782b50c","name":"TelnetFun|远程JS","method":"POST","mark":"complated","is_doc":0,"target_type":"api","status":1,"sort":2,"create_dtime":1616639819,"update_dtime":1641925374,"target_id":22555109,"create_users":{"create_user":"Sleep","update_user":"Sleep"},"request":{"url":"http:\/\/127.0.0.1:8080\/TelnetFun","description":"","auth":{"type":"noauth","kv":{"key":"","value":""},"bearer":{"key":""},"basic":{"username":"","password":""}},"body":{"mode":"json","parameter":[],"raw":"{\n    \"UserName\": \"admin12311\",\n    \"UserPwd\": \"admin321\",\n    \"LoginMethod\": true,\n    \"fun\": \"整数相加\",\n    \"param\": \"100,9,1\",\n    \"Mac\": 1960979373,\n    \"Version\": 1,\n    \"Software\": \"通用\",\n    \"processID\": 6752,\n    \"SystemTime\": 8134404,\n    \"timestamp\": 1641731894\n}","raw_para":[{"description":"用户名","is_checked":1,"key":"UserName","type":"Text","not_null":"1","field_type":"String","value":"admin12311"},{"description":"密码","is_checked":1,"key":"UserPwd","type":"Text","not_null":"1","field_type":"String","value":"admin321"},{"description":"登录方式","is_checked":1,"key":"LoginMethod","type":"Text","not_null":"1","field_type":"","value":"true"},{"description":"JS函数名称","is_checked":1,"key":"fun","type":"Text","not_null":"1","field_type":"String","value":"整数相加"},{"description":"JS函数参数 多参数用符号“,”分割","is_checked":1,"key":"param","type":"Text","not_null":"1","field_type":"Number","value":"100,9,1"},{"description":"机器码","is_checked":1,"key":"Mac","type":"Text","not_null":"1","field_type":"Number","value":"1960979373"},{"description":"客户端版本","is_checked":1,"key":"Version","type":"Text","not_null":"1","field_type":"Number","value":"1"},{"description":"客户端软件名称","is_checked":1,"key":"Software","type":"Text","not_null":"1","field_type":"String","value":"通用"},{"description":"客户端PID","is_checked":1,"key":"processID","type":"Text","not_null":"1","field_type":"Number","value":"6752"},{"description":"客户端系统时间","is_checked":1,"key":"SystemTime","type":"Text","not_null":"1","field_type":"Number","value":"8134404"},{"description":"当前时间戳","is_checked":1,"key":"timestamp","type":"Text","not_null":"1","field_type":"Number","value":"1641731894"}]},"event":{"pre_script":"","test":""},"header":{"parameter":[]},"query":{"parameter":[]},"cookie":{"parameter":[]},"resful":{"parameter":[]},"url_var":"http:\/\/127.0.0.1:8080\/TelnetFun"},"response":{"success":{"raw":"{\n\t\"success\": true,\n\t\"code\": 200,\n\t\"msg\": \"110\",\n\t\"data\": {\n\t\t\"value\": \"110\"\n\t}\n}","parameter":[]},"error":{"raw":"","parameter":[]}}}]},{"local_target_id":"a1e3b19c-b873-41b5-a6b8-2def63e5d958","local_parent_id":"0","name":"其他接口","method":"POST","mark":"developing","is_doc":0,"target_type":"folder","status":1,"sort":7,"create_dtime":1616639819,"update_dtime":1641728508,"target_id":22453270,"create_users":{"create_user":"Sleep","update_user":"Sleep"},"request":{"description":"","header":[],"query":[],"body":[],"auth":[]},"script":{"pre_script":"","test":""},"children":[{"local_target_id":"068627a9-cc7c-4aa5-8ac1-17190f1a9908","local_parent_id":"a1e3b19c-b873-41b5-a6b8-2def63e5d958","name":"Points|扣点","method":"POST","mark":"complated","is_doc":0,"target_type":"api","status":1,"sort":2,"create_dtime":1616639819,"update_dtime":1641810989,"target_id":22454819,"create_users":{"create_user":"Sleep","update_user":"Sleep"},"request":{"url":"http:\/\/127.0.0.1:8080\/Points","description":"","auth":{"type":"noauth","kv":{"key":"","value":""},"bearer":{"key":""},"basic":{"username":"","password":""}},"body":{"mode":"json","parameter":[],"raw":"{\n\t\"UserName\": \"admin12311\",\n\t\"UserPwd\": \"admin321\",\n\t\"LoginMethod\": true,\n\t\"Point\": 1,\n\t\"Mac\": 1960979373,\n\t\"Version\": 1,\n\t\"Software\": \"通用\",\n\t\"processID\": 13836,\n\t\"SystemTime\": 23543384,\n\t\"timestamp\": 1641747305\n}","raw_para":[{"description":"用户名","is_checked":1,"key":"UserName","type":"Text","not_null":"1","field_type":"String","value":"admin12311"},{"description":"密码","is_checked":1,"key":"UserPwd","type":"Text","not_null":"1","field_type":"String","value":"admin321"},{"description":"登录方式","is_checked":1,"key":"LoginMethod","type":"Text","not_null":"1","field_type":"","value":"true"},{"description":"扣除点数","is_checked":1,"key":"Point","type":"Text","not_null":"1","field_type":"Number","value":"1"},{"description":"机器码","is_checked":1,"key":"Mac","type":"Text","not_null":"1","field_type":"Number","value":"1960979373"},{"description":"客户端版本","is_checked":1,"key":"Version","type":"Text","not_null":"1","field_type":"Number","value":"1"},{"description":"客户端软件名称","is_checked":1,"key":"Software","type":"Text","not_null":"1","field_type":"String","value":"通用"},{"description":"客户端PID","is_checked":1,"key":"processID","type":"Text","not_null":"1","field_type":"Number","value":"13836"},{"description":"客户端系统时间","is_checked":1,"key":"SystemTime","type":"Text","not_null":"1","field_type":"Number","value":"23543384"},{"description":"当前时间戳","is_checked":1,"key":"timestamp","type":"Text","not_null":"1","field_type":"Number","value":"1641747305"}]},"event":{"pre_script":"","test":""},"header":{"parameter":[]},"query":{"parameter":[]},"cookie":{"parameter":[]},"resful":{"parameter":[]},"url_var":"http:\/\/127.0.0.1:8080\/Points"},"response":{"success":{"raw":"{\n\t\"success\": true,\n\t\"code\": 200,\n\t\"msg\": \"扣点成功！\",\n\t\"data\": {\n\t\t\"Points\": 998\n\t}\n}","parameter":[]},"error":{"raw":"","parameter":[]}}}]},{"local_target_id":"d3e82539-0152-404f-bb66-59875d24a3c7","local_parent_id":"0","name":"文件接口","method":"POST","mark":"developing","is_doc":0,"target_type":"folder","status":1,"sort":8,"create_dtime":1616639819,"update_dtime":1641922817,"target_id":22555012,"create_users":{"create_user":"Sleep","update_user":"Sleep"},"request":{"description":"","header":[],"query":[],"body":[],"auth":[]},"script":{"pre_script":"","test":""},"children":[{"local_target_id":"c9b4f752-dcf0-47ec-9117-4a0662767462","local_parent_id":"d3e82539-0152-404f-bb66-59875d24a3c7","name":"DownloadFile|下载服务器文件","method":"POST","mark":"complated","is_doc":0,"target_type":"api","status":1,"sort":1,"create_dtime":1616639819,"update_dtime":1641938194,"target_id":22555176,"create_users":{"create_user":"Sleep","update_user":"Sleep"},"request":{"url":"http:\/\/127.0.0.1:8080\/DownloadFile","description":"","auth":{"type":"noauth","kv":{"key":"","value":""},"bearer":{"key":""},"basic":{"username":"","password":""}},"body":{"mode":"json","parameter":[],"raw":"{\n    \"File\": \"说明.txt\"\n}","raw_para":[{"description":"需下载的文件名","is_checked":1,"key":"File","type":"Text","not_null":"1","field_type":"String","value":"说明.txt"}]},"event":{"pre_script":"","test":""},"header":{"parameter":[]},"query":{"parameter":[]},"cookie":{"parameter":[]},"resful":{"parameter":[]},"url_var":"http:\/\/127.0.0.1:8080\/DownloadFile"},"response":{"success":{"raw":"比如在此目录放入   1.txt  文件。\n下面代码取回文本内容， 不需要登录就可以获取。\n一般用于公告\n\n\n文本内容 =  到文本(文件_下载服务器文件(\"1.txt\"))","parameter":[]},"error":{"raw":"","parameter":[]}}},{"local_target_id":"6d8fed07-76f6-48ac-ba67-d1503757f278","local_parent_id":"d3e82539-0152-404f-bb66-59875d24a3c7","name":"GetFileMD5|取服务器文件MD5","method":"POST","mark":"complated","is_doc":0,"target_type":"api","status":1,"sort":2,"create_dtime":1616639819,"update_dtime":1641938202,"target_id":22555178,"create_users":{"create_user":"Sleep","update_user":"Sleep"},"request":{"url":"http:\/\/127.0.0.1:8080\/GetFileMD5","description":"","auth":{"type":"noauth","kv":{"key":"","value":""},"bearer":{"key":""},"basic":{"username":"","password":""}},"body":{"mode":"json","parameter":[],"raw":"{\n    \"File\": \"说明.txt\"\n}","raw_para":[{"description":"需取MD5的文件名","is_checked":1,"key":"File","type":"Text","not_null":"1","field_type":"String","value":"说明.txt"}]},"event":{"pre_script":"","test":""},"header":{"parameter":[]},"query":{"parameter":[]},"cookie":{"parameter":[]},"resful":{"parameter":[]},"url_var":"http:\/\/127.0.0.1:8080\/GetFileMD5"},"response":{"success":{"raw":"{\n\t\"success\": true,\n\t\"code\": 200,\n\t\"msg\": \"9549DB6244FC9D7770D25C1FAABFCAA6\",\n\t\"data\": {\n\t\t\"value\": \"9549DB6244FC9D7770D25C1FAABFCAA6\"\n\t}\n}","parameter":[]},"error":{"raw":"","parameter":[]}}}]},{"local_target_id":"ef9f46b2-07e5-4151-913a-3207b93e37f8","local_parent_id":"0","name":"一键网络验证","method":"POST","mark":"developing","is_doc":0,"target_type":"folder","status":1,"sort":9,"create_dtime":1616639819,"update_dtime":1644019998,"target_id":23140399,"create_users":{"create_user":"Sleep","update_user":"Sleep"},"request":{"description":"","header":[],"query":[],"body":[],"auth":[]},"script":{"pre_script":"","test":""},"children":[{"local_target_id":"5f550e49-aac7-4aa4-a6cb-e54985b72f89","local_parent_id":"ef9f46b2-07e5-4151-913a-3207b93e37f8","name":"自定义UI说明","method":"POST","mark":"developing","is_doc":0,"target_type":"doc","status":1,"sort":1,"create_dtime":1616639819,"update_dtime":1644377453,"target_id":23140400,"create_users":{"create_user":"Sleep","update_user":"Sleep"},"request":{"url":"","description":"自定义U I基于优秀的炫彩界面库\n\n```\n问：如何设计UI?\n答：使用炫彩UI设计器，设计好后保存点击打包（请注意资源包目录要求）！\n问：如何学习使用炫彩设计器？\n答：[bilibili在线教程](https:\/\/www.bilibili.com\/video\/BV1kA411A71p)\n```\n# 资源包目录要求\n| 目录名称 | 存储资源类型 | 强制性需求 |\n| -------- | -------- | -------- |\n| 布局文件     | main.xml     | 真     |\n| 样式文件     | style.css     | 真     |\n| 资源文件     | resource.res     | 真     |\n| images     | 存储图片资源     | 假     |\n\n\n# 控件中英文对照表\n\n\n| 英文名称 | 中文名称 |\n| -------- | -------- |\n| shapeText     | 形状文本     |\n| editUI     | 编辑框     |\n| buttonUI     | 按钮     |\n\n# 单卡模板：\n控件名称 是指 设计UI时给控件 设置的名称\n\n| 控件文本 | 控件名称 | 控件类型 | 强制性需求 | 控件用途 |\n| -------- | -------- | -------- | -------- | -------- |\n| 请输入单卡卡密 | edit_Code | editUI | 真  | 输入卡密 |\n| 登录 | button_Login | buttonUI | 真 | 确认登录 |\n| 标题 | Text_Title | shapeText | 假 | 显示软件标题 |\n| 公告 | Text_Bulletin | shapeText | 假 | 显示公告 |\n| 记住卡密 | button_Keep | buttonUI | 假 | 是否记录卡密 |\n\n\n","auth":{"type":"noauth","kv":{"key":"","value":""},"bearer":{"key":""},"basic":{"username":"","password":""}},"body":{"mode":"json","parameter":[],"raw":"","raw_para":[]},"event":{"pre_script":"","test":""},"header":{"parameter":[]},"query":{"parameter":[]},"cookie":{"parameter":[]},"resful":{"parameter":[]}},"response":{"success":{"raw":"","parameter":[]},"error":{"raw":"","parameter":[]}}}]},{"local_target_id":"fd9ee884-c86e-4622-b092-3c6c48ce339e","local_parent_id":"0","name":"防破解思路与教学","method":"POST","mark":"developing","is_doc":0,"target_type":"folder","status":1,"sort":10,"create_dtime":1616639819,"update_dtime":1644492620,"target_id":23251118,"create_users":{"create_user":"Sleep","update_user":"Sleep"},"request":{"description":"","header":[],"query":[],"body":[],"auth":[]},"script":{"pre_script":"","test":""},"children":[{"local_target_id":"78e46088-4a21-47cb-a0d4-5bf5cd7f63a5","local_parent_id":"fd9ee884-c86e-4622-b092-3c6c48ce339e","name":"防破解思路","method":"POST","mark":"developing","is_doc":0,"target_type":"doc","status":1,"sort":1,"create_dtime":1616639819,"update_dtime":1654959332,"target_id":23251230,"create_users":{"create_user":"Sleep","update_user":"Sleep"},"request":{"url":"","description":"![](.\/user\/933591\/bcf557dde30b7f00.png)\n1、尽量多使用：远程JS、云计算、远程变量，你花的时间越多，破解者分析花的时间更多。。。。\n\n![](.\/user\/933591\/7fa048e6207111ef.png)\n\n2、减少使用信息框函数、因为很多破解者是 使用该函数下断点来破解的 所以减少使用该函数 能有效提高安全系数，可以考虑使用编辑框按钮等控件来显示提示内容。\n\n3、使用自定义加解密dll、编写属于自己的独立的加解密方案、可以考虑使用RSA算法等，这样破解者使用封包破解程序难度极大。\n\n4、如何评估自己的软件是否安全！最绝对的方法就是 你的软件 脱离了服务端 就不能功能正常使用了 就能保证软件软件很安全。\n\n5、多花心思去做、不要怕麻烦、你怕麻烦 破解者也怕麻烦、你做的多、破解者就需要做更多！！！","auth":{"type":"noauth","kv":{"key":"","value":""},"bearer":{"key":""},"basic":{"username":"","password":""}},"body":{"mode":"json","parameter":[],"raw":"","raw_para":[]},"event":{"pre_script":"","test":""},"header":{"parameter":[]},"query":{"parameter":[]},"cookie":{"parameter":[]},"resful":{"parameter":[]}},"response":{"success":{"raw":"","parameter":[]},"error":{"raw":"","parameter":[]}}}]},{"local_target_id":"100ee304-8d3b-47c2-8e8b-5d0426e41637","local_parent_id":"0","name":"资源下载","method":"POST","mark":"developing","is_doc":0,"target_type":"folder","status":1,"sort":11,"create_dtime":1616639819,"update_dtime":1657712811,"target_id":32939108,"create_users":{"create_user":"Sleep","update_user":"Sleep"},"request":{"description":"","header":[],"query":[],"body":[],"auth":[]},"script":{"pre_script":"","test":""},"children":[{"local_target_id":"5f2ae75a-0e12-4089-ad8e-86e9025a1967","local_parent_id":"100ee304-8d3b-47c2-8e8b-5d0426e41637","name":"易语言","method":"POST","mark":"developing","is_doc":0,"target_type":"folder","status":1,"sort":1,"create_dtime":1616639819,"update_dtime":1657712842,"target_id":32939128,"create_users":{"create_user":"Sleep","update_user":"Sleep"},"request":{"description":"","header":[],"query":[],"body":[],"auth":[]},"script":{"pre_script":"","test":""},"children":[{"local_target_id":"a2f71896-bfdb-4e33-a30d-fbdb59c8a04e","local_parent_id":"5f2ae75a-0e12-4089-ad8e-86e9025a1967","name":"客户端模块","method":"POST","mark":"developing","is_doc":0,"target_type":"doc","status":1,"sort":1,"create_dtime":1657712874,"update_dtime":1657712874,"target_id":32939163,"create_users":{"create_user":"Sleep","update_user":"Sleep"},"request":{"url":"","description":"","auth":{"type":"noauth","kv":{"key":"","value":""},"bearer":{"key":""},"basic":{"username":"","password":""}},"body":{"mode":"json","parameter":[],"raw":"","raw_para":[]},"event":{"pre_script":"","test":""},"header":{"parameter":[]},"query":{"parameter":[]},"cookie":{"parameter":[]},"resful":{"parameter":[]}},"response":{"success":{"raw":"","parameter":[]},"error":{"raw":"","parameter":[]}}},{"local_target_id":"02d9e0ae-7cbd-404d-9b58-34754d1305a6","local_parent_id":"5f2ae75a-0e12-4089-ad8e-86e9025a1967","name":"用户登录源码","method":"POST","mark":"developing","is_doc":0,"target_type":"doc","status":1,"sort":2,"create_dtime":1657712885,"update_dtime":1657712907,"target_id":32939167,"create_users":{"create_user":"Sleep","update_user":"Sleep"},"request":{"url":"","description":"","auth":{"type":"noauth","kv":{"key":"","value":""},"bearer":{"key":""},"basic":{"username":"","password":""}},"body":{"mode":"json","parameter":[],"raw":"","raw_para":[]},"event":{"pre_script":"","test":""},"header":{"parameter":[]},"query":{"parameter":[]},"cookie":{"parameter":[]},"resful":{"parameter":[]}},"response":{"success":{"raw":"","parameter":[]},"error":{"raw":"","parameter":[]}}},{"local_target_id":"808cf2cb-b554-42b5-ae17-c0a84fefd82e","local_parent_id":"5f2ae75a-0e12-4089-ad8e-86e9025a1967","name":"单卡登录源码","method":"POST","mark":"developing","is_doc":0,"target_type":"doc","status":1,"sort":3,"create_dtime":1657712902,"update_dtime":1657712902,"target_id":32939171,"create_users":{"create_user":"Sleep","update_user":"Sleep"},"request":{"url":"","description":"","auth":{"type":"noauth","kv":{"key":"","value":""},"bearer":{"key":""},"basic":{"username":"","password":""}},"body":{"mode":"json","parameter":[],"raw":"","raw_para":[]},"event":{"pre_script":"","test":""},"header":{"parameter":[]},"query":{"parameter":[]},"cookie":{"parameter":[]},"resful":{"parameter":[]}},"response":{"success":{"raw":"","parameter":[]},"error":{"raw":"","parameter":[]}}}]},{"local_target_id":"0e618e10-822b-4717-ae0b-1a43dda0c34b","local_parent_id":"100ee304-8d3b-47c2-8e8b-5d0426e41637","name":"工具","method":"POST","mark":"developing","is_doc":0,"target_type":"folder","status":1,"sort":2,"create_dtime":1616639819,"update_dtime":1657712983,"target_id":32939198,"create_users":{"create_user":"Sleep","update_user":"Sleep"},"request":{"description":"","header":[],"query":[],"body":[],"auth":[]},"script":{"pre_script":"","test":""},"children":[{"local_target_id":"be1f6103-66ad-4641-bcd7-8868d3d064a5","local_parent_id":"0e618e10-822b-4717-ae0b-1a43dda0c34b","name":"资源下载器","method":"POST","mark":"developing","is_doc":0,"target_type":"doc","status":1,"sort":1,"create_dtime":1657712994,"update_dtime":1657712994,"target_id":32939200,"create_users":{"create_user":"Sleep","update_user":"Sleep"},"request":{"url":"","description":"","auth":{"type":"noauth","kv":{"key":"","value":""},"bearer":{"key":""},"basic":{"username":"","password":""}},"body":{"mode":"json","parameter":[],"raw":"","raw_para":[]},"event":{"pre_script":"","test":""},"header":{"parameter":[]},"query":{"parameter":[]},"cookie":{"parameter":[]},"resful":{"parameter":[]}},"response":{"success":{"raw":"","parameter":[]},"error":{"raw":"","parameter":[]}}},{"local_target_id":"1808508e-2260-408c-8396-23bbf11074ca","local_parent_id":"0e618e10-822b-4717-ae0b-1a43dda0c34b","name":"MF_VMProtect","method":"POST","mark":"developing","is_doc":0,"target_type":"doc","status":1,"sort":2,"create_dtime":1657713013,"update_dtime":1657713013,"target_id":32939208,"create_users":{"create_user":"Sleep","update_user":"Sleep"},"request":{"url":"","description":"","auth":{"type":"noauth","kv":{"key":"","value":""},"bearer":{"key":""},"basic":{"username":"","password":""}},"body":{"mode":"json","parameter":[],"raw":"","raw_para":[]},"event":{"pre_script":"","test":""},"header":{"parameter":[]},"query":{"parameter":[]},"cookie":{"parameter":[]},"resful":{"parameter":[]}},"response":{"success":{"raw":"","parameter":[]},"error":{"raw":"","parameter":[]}}}]}]}]};
+    function GetUrlQuery(uri) {
+        let url = '';
+        if (typeof uri === 'undefined') {
+            url = window.location.search;
+        } else {
+            url = `?${uri.split('?')[1]}`;
+        }
+        const theRequest = {};
+        if (url.indexOf('?') !== -1) {
+            const str = url.substr(1);
+            const strs = str.split('&');
+            for (let i = 0; i < strs.length; i++) {
+                theRequest[strs[i].split('=')[0]] = unescape(strs[i].split('=')[1]);
+            }
+        }
+        return theRequest;
+    };
+
+    function findFatherDom(el) {
+        if (el.parent().parent().children(":first").hasClass('folder')) {
+            el.parent().parent().show()
+            console.log(el.parent().parent());
+            el.parent().parent().children().show()
+            el.parent().parent().children(":first").find('.folder_select').removeClass('right').addClass('down')
+            el.parent().parent().children(":first").nextAll('.folder').find('folder_select').removeClass('down').addClass('right')
+            findFatherDom(el.parent().prev())
+        } else {
+            el.parent().children().show()
+            return
+        }
+    }
+    window.onload = function () {
+        // const { url, salt } = GetUrlQuery();
+        const head_obj = {
+            portrait: arr.portrait,
+        }
+        let head_html = template('doc-head-tpl', head_obj);
+
+        $('.doc-head .container').html(head_html)
+        let _html = template('template-target-sidebar-list-tpl', {
+            list: arr.children
+        });
+
+        $('.new').html(_html)
+        let project_name_html = template('project-name-tpl', {
+            project_name: arr.project_name
+        });
+        $('.box-first .title').html(project_name_html)
+
+        $('.target.folder').find('.folder_select').removeClass('down').addClass('right')
+        $('.target.folder').nextAll().hide()
+        let urlLink = window.location.href;
+        let id = urlLink.split('#')[1] ? urlLink.split('#')[1] : '001'
+        if ($(`.target[data-target_id="${id}"]`).length > 0) {
+            if (id != '001') {
+                findFatherDom($(`.target[data-target_id="${id}"]`))
+            }
+
+            $(`.target[data-target_id="${id}"]`).trigger('click')
+        } else {
+            location.href = urlLink.split('#')[0] + "#001"
+            return
+        }
+        var resize = document.getElementsByClassName("bar");
+        var left = document.getElementsByClassName("box-first");
+        var mid = document.getElementsByClassName("box-third");
+        var box = document.getElementsByClassName("box");
+        console.log(123434);
+        dragControllerDiv(resize, left, mid, box);
+        $('.target.folder').find('.folder_select').removeClass('down').addClass('right')
+        $('.target.folder').nextAll().hide()
+
+    }
+    $('.body').show()
+    $(document).on('click', '.target', function () {
+        let _local_target_id = $(this).attr('data-target_id');
+        let urlLink = window.location.href.split('#')[0] + '#' + _local_target_id;
+
+        const { url, salt } = GetUrlQuery();
+        const token = localStorage.getItem(`token${url}`);
+        history.replaceState(null, null, urlLink)
+        console.log(url);
+
+        $('.target').each((i, el) => {
+            $(el).removeClass('active')
+        })
+        if ($(this).attr('data-type') == 'folder') {
+            $('.box-nav').show()
+            $(this).nextAll().show()
+            $(this).find('.folder_select').removeClass('right').addClass('down')
+            $('.box-nav .folder').show()
+            $('.box-nav .api').hide()
+        } else if ($(this).attr('data-type') == 'example' || $(this).attr('data-type') == 'api') {
+            $('.box-nav').show()
+            $('.box-nav .api').show()
+            $('.box-nav .folder').hide()
+        } else {
+            $('.box-nav').hide()
+        }
+
+        $(this).addClass('active')
+        // if (_local_target_id == 001 || !_local_target_id) {
+        //   return;
+        // }
+        let newdata = JSON.parse(JSON.stringify(arr))
+        let LevelArr = []
+
+        function levelTree(arr1, newarr) {
+            arr1.forEach(item => {
+                if (item.children && item.children.length > 0) {
+                    newarr.push(item)
+                    levelTree(item.children, newarr)
+                } else {
+                    newarr.push(item)
+                }
+            })
+        }
+
+        levelTree(newdata.children, LevelArr)
+        LevelArr.forEach(item => {
+            if (item.local_target_id == _local_target_id) {
+                if (item.target_type == 'example' || item.target_type == 'api') {
+                    switch (item.request.body.mode) {
+                        case "none":
+                            break;
+                        case "form-data":
+                            item.request.body.mode = "multipart/form-data";
+                            break;
+                        case "urlencoded":
+                            item.request.body.mode = "application/x-www-form-urlencoded";
+                            break;
+                        case "json":
+                            item.request.body.mode = "application/json";
+                            break;
+                        case "xml":
+                            item.request.body.mode = "application/xml";
+                            break;
+                        case "javascript":
+                            item.request.body.mode = "application/javascript";
+                            break;
+                        case "plain":
+                            item.request.body.mode = "text/plain";
+                            break;
+                        case "html":
+                            item.request.body.mode = "text/html";
+                            break;
+                    }
+                    $('.template-nav-menu').html(template('template-nav-menu-tpl', item));
+                    if (item.target_type != 'folder') {
+                        let _export_data = new ClipboardJS('.CopyCurrentData', {
+                            text: function (trigger) {
+                                return trigger.getAttribute('data-clipboard-text');
+                            }
+                        });
+                        console.log(_export_data);
+                        _export_data.on('success', function (e) {
+                            $('.CopyCurrentData').text('已复制').addClass('success');
+                            e.clearSelection();
+                        });
+                        _export_data.on('error', function (e) {
+                            console.log('失败');
+                        });
+                    }
+                }
+                arr?.project?.vars?.mark.forEach((it) => {
+                    if (it.key == item.mark) {
+                        if (it.color == '') {
+                            if (item.mark == 'developing') {
+                                item.markName = '开发中'
+                                item.markColor = 'rgb(58, 134, 255)'
+                            }
+                            if (item.mark == 'complated') {
+                                item.markName = '已完成'
+                                item.markColor = 'rgb(46, 196, 182)'
+                            }
+                            if (item.mark == 'modifying') {
+                                item.markName = '需修改'
+                                item.markColor = 'rgb(236, 70, 70)'
+                            }
+                        } else {
+                            item.markName = it.name
+                            item.markColor = it.color
+                        }
+                    }
+                })
+                let _html = template('template-example-doc-tpl', item);
+                $('.preview-markdown').html(_html)
+                if (item.target_type == 'folder') {
+                    const folderData = { ...item }
+                    if (item.target_type == 'folder') {
+                        folderData?.request?.header?.forEach((it, index) => !it.key && folderData.request?.header.splice(index, 1))
+                        folderData?.request?.query?.forEach((it, index) => !it.key && folderData.request?.query.splice(index, 1))
+                        folderData?.request?.body?.forEach((it, index) => !it.key && folderData.request?.body.splice(index, 1))
+                    }
+                    let _html = template('template-example-doc-tpl', folderData);
+                    if ($('table.header tr').length <= 1) {
+                        $('table.header').parent().hide()
+                        $('table.header').parent().prev().hide()
+                        $('.nav-folder-btn[data-id="1"]').hide()
+                        // $('table.header tr').after('<tr><td colspan="4" style="text-align:center">暂无数据</td></tr>')
+                    }
+                    if ($('table.query tr').length <= 1) {
+                        $('table.query').parent().hide()
+                        $('table.query').parent().prev().hide()
+                        $('.nav-folder-btn[data-id="2"]').hide()
+                        // $('table.query tr').after('<tr><td colspan="4" style="text-align:center">暂无数据</td></tr>')
+                    }
+                    if ($('table.body tr').length <= 1) {
+                        $('table.body').parent().hide()
+                        $('table.body').parent().prev().hide()
+                        $('.nav-folder-btn[data-id="3"]').hide()
+                        // $('table.body tr').after('<tr><td colspan="4" style="text-align:center">暂无数据</td></tr>')
+                    }
+                    if ($('table.header tr').length <= 1 && $('table.query tr').length <= 1 && $('table.body tr').length <= 1) {
+                        $('table.header').parents('.markdown-request').prev().hide()
+                        $('.box-nav .nav-folder-btn[data-id="0"]').hide()
+                        $('.preview-markdown .markdown-request').after('<div style="overflow: hidden;text-align: center;height: 100%;"><img src="./v6/docs/img/empty.svg" style="width:100px;margin: 70px auto 20px;;">暂无参数</div>')
+
+                    }
+                    hljs.initHighlighting();
+                } else {
+                    let _export_data = new ClipboardJS('.CopyCurrentData', {
+                        text: function (trigger) {
+                            return trigger.getAttribute('data-clipboard-text');
+                        }
+                    });
+                    console.log(_export_data);
+                    _export_data.on('success', function (e) {
+                        $('.CopyCurrentData').text('已复制').addClass('success');
+                        e.clearSelection();
+                    });
+                    _export_data.on('error', function (e) {
+                        console.log('失败');
+                    });
+                    $('.CopyCurrentData').attr('data-clipboard-text', JSON.stringify(item));
+                }
+                try {
+                    let obj = item.request.body.raw_para.map(item => {
+                        let arr = item.key.split('.')
+                        item.newKey = arr[arr.length - 1]
+                        return item
+                    })
+
+                    let editor = new JsonEditor('#request_body_raw_editor_json', JSON5.parse($('#request_body_raw_editor_input').val()), {}, obj).load(JSON5.parse($('#request_body_raw_editor_input').val()), obj)
+                } catch (e) {
+                    console.log(e);
+                }
+                // 成功响应示例
+                try {
+                    let obj = item.response.success.parameter.map(item => {
+                        let arr = item.key.split('.')
+                        item.newKey = arr[arr.length - 1]
+                        return item
+                    })
+                    let editor = new JsonEditor('#response_success_editor_json', JSON5.parse($('#response_success_editor_input').val()), {}, obj).load(JSON5.parse($('#response_success_editor_input').val()), obj)
+                } catch (e) { console.log(e); }
+                // 失败响应示例
+                try {
+                    let obj = item.response.error.parameter.map(item => {
+                        let arr = item.key.split('.')
+                        item.newKey = arr[arr.length - 1]
+                        return item
+                    })
+
+                    let editor = new JsonEditor('#response_error_editor_json', JSON5.parse($('#response_error_editor_input').val()), {}, obj).load(JSON5.parse($('#response_error_editor_input').val()), obj)
+                } catch (e) { console.log(e); }
+                aptIndent.init();
+            }
+        })
+        $("table").colResizable({
+            liveDrag: true,
+            gripInnerHtml: "<div class='grip'></div>",
+            draggingClass: "dragging",
+            resizeMode: 'fit'
+        });
+    })
+        .on('click', '.control', function (e) {
+            e.stopPropagation()
+            let type = $(this).find('.folder_select').hasClass('down')
+            if (type) {
+                $(this).find('.folder_select').removeClass('down').addClass('right')
+            } else {
+                $(this).find('.folder_select').removeClass('right').addClass('down')
+            }
+            $(this).parents('.target').nextAll().toggle()
+        })
+        .on('input', '.search', function (e) {
+            if (timer) {
+                clearTimeout(timer);
+            }
+            timer = setTimeout(() => {
+                let searchVal = $(this).val().toLocaleLowerCase()
+                let TreeData = JSON.parse(JSON.stringify(arr.children))
+                let searchArr = []
+                let LevelArr = []
+                let fatherArr = []
+                function openTree(tree, parent_id) {
+                    tree.forEach((item) => {
+                        if (item.children && item.children.length > 0) {
+                            openTree(item.children, item.local_target_id)
+                        }
+                        item.parent_id = parent_id
+                    })
+                }
+                openTree(TreeData, 0);
+                function levelTree(arr, newarr) {
+                    arr.forEach(item => {
+                        if (item.children && item.children.length > 0) {
+                            newarr.push(item)
+                            levelTree(item.children, newarr)
+                        } else {
+                            newarr.push(item)
+                        }
+                    })
+                }
+                levelTree(TreeData, LevelArr)
+                if ($.trim(searchVal) != '') {
+                    LevelArr.forEach(item => {
+                        if (item.target_type == 'folder') {
+                            if (item.name.toString().toLocaleLowerCase().indexOf(searchVal) > -1) {
+                                searchArr.push(item)
+                            }
+                        } else {
+                            if (item.name.toString().toLocaleLowerCase().indexOf(searchVal) > -1 || item.method.toString().toLocaleLowerCase().indexOf(searchVal) > -1) {
+                                searchArr.push(item)
+                            }
+                        }
+                    })
+                    searchArr.forEach(item => {
+                        findFather(fatherArr, LevelArr, item)
+                    })
+
+                    function findFather(tempArr, arr, self) {
+                        if (self.parent_id != 0) {
+                            arr.filter(item => {
+                                if (self.parent_id == item.local_target_id) {
+                                    findFather(tempArr, arr, item);
+                                    if (tempArr.indexOf(item) === -1) {
+                                        tempArr.push(item);
+                                    }
+                                }
+                            })
+                        }
+                    }
+
+                    let finnalArr = searchArr.concat(fatherArr)
+                    $('.target').hide()
+                    $('.target[data-target_id="001"]').show()
+                    finnalArr.forEach(item => {
+                        $(`.target[data-target_id="${item.local_target_id}"]`).parent().show()
+                        $(`.target[data-target_id="${item.local_target_id}"]`).show()
+                        $('.target.folder').find('.folder_select').removeClass('right').addClass('down')
+                    })
+                } else {
+                    $('.target').parent().show()
+                    $('.target').show()
+                }
+            }, 100)
+        })
+        .on('mouseover', '.target.api', function () {
+            // $(this).find('em').css({ visibility: 'visible' })
+        })
+        .on('mouseleave', '.target.api', function () {
+            // $(this).find('em').css({ visibility: 'hidden' })
+        })
+        .on('click', '.nav-btn', function () {
+            let index = parseInt($(this).attr('data-id'))
+            $('.nav-btn').removeClass('cur')
+            $(this).addClass('cur')
+            console.log(index, $('.box-third .title').eq(index)[0]);
+            let top = $('.box-third .title').eq(index)[0].offsetTop
+            $('.box-third').scrollTop(top)
+        })
+        .on('click', '.nav-folder-btn', function () {
+            let index = parseInt($(this).attr('data-id'))
+            $('.nav-folder-btn').removeClass('cur')
+            $(this).addClass('cur')
+            let top = $('.box-third .title').eq(index)[0].offsetTop
+            $('.box-third').scrollTop(top)
+        })
+        .on('click', '.box-first .top', function () {
+            $('.target').removeClass('active')
+            $(this).addClass('active')
+            const obj = { ...arr?.project }
+            obj.create_dtime = arr?.create_time
+            obj.expire_time = arr?.expire_time
+            obj?.vars?.request?.header?.forEach((it, index) => {
+                if (!it.key) {
+                    obj?.vars?.request?.header?.splice(index, 1)
+                }
+            })
+            obj?.vars?.request?.query?.forEach((it, index) => {
+                if (!it.key) {
+                    obj?.vars?.request?.query?.splice(index, 1)
+                }
+            })
+            obj?.vars?.request?.body?.forEach((it, index) => {
+                if (!it.key) {
+                    obj?.vars?.request?.body?.splice(index, 1)
+                }
+            })
+            let _html = template('golbal-env-tpl', obj);
+            $('.preview-markdown').html(_html)
+        })
+        .on('click', 'h3.title', function () {
+            let type = $(this).find('i').hasClass('fa-angle-down')
+            if (type) {
+                $(this).find('i').removeClass('fa-angle-down').addClass('fa-angle-left')
+            } else {
+                $(this).find('i').removeClass('fa-angle-left').addClass('fa-angle-down')
+            }
+            $(this).next().toggle()
+        })
+        .on('mouseover', '.export', function () {
+            $(this).find('.export_panel').show()
+        })
+        .on('mouseleave', '.export', function () {
+            $(this).find('.export_panel').hide()
+        })
+    $(".box-third").scroll(function () {
+        let arr = []
+        $('.box-third .title').each((i, el) => {
+            arr.push($(el)[0].offsetTop)
+        })
+        arr.push(arr[arr.length - 1] + 10000)
+        let topHeight = $(this).scrollTop();
+        if ($('.target.active').hasClass('api')) {
+            for (let index = 0; index < arr.length; index++) {
+                if (arr[index] < topHeight && topHeight < arr[index + 1]) {
+                    $('.nav-btn').removeClass('cur')
+                    $('.nav-btn').eq(index).addClass('cur')
+                }
+            }
+        } else {
+            for (let index = 0; index < arr.length; index++) {
+                if (arr[index] < topHeight && topHeight < arr[index + 1]) {
+                    $('.nav-folder-btn').removeClass('cur')
+                    $('.nav-folder-btn').eq(index).addClass('cur')
+                }
+            }
+        }
+    });
+</script>
+
+</body>
+
+</html>
