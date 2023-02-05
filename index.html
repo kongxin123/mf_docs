@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="zh">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
+        <title></title>
+        <style type="text/css">
+            abbr,address,audio,b,blockquote,body,cite,code,dd,del,dfn,div,dl,dt,em,h1,h2,h3,h4,h5,h6,html,i,iframe,img,ins,kbd,li,ol,p,pre,q,samp,small,span,strong,sub,sup,ul,var,video {
+                margin: 0;
+                padding: 0;
+                border: 0;
+                outline: 0;
+                list-style: none
+            }
+
+            body,html {
+                width: 100%;
+                height: 100%
+            }
+
+            body {
+                font-family: Microsoft YaHei,Myriad Set Pro,Lucida Grande,Hiragino Sans GB,Helvetica,Arial,"sans-serif";
+                -webkit-text-size-adjust: 100%;
+                -webkit-font-smoothing: antialiased;
+                -webkit-tap-highlight-color: transparent;
+                font-size: 26px;
+                line-height: 1em;
+                color: red
+            }
+
+            .nav-table-container {
+                padding: 10px 18px 0
+            }
+
+            .nav-list p {
+                color: #333;
+                font-size: 16px
+            }
+
+            .nav-list ul {
+                display: -webkit-box;
+                display: -ms-flexbox;
+                display: flex;
+                -webkit-box-orient: horizontal;
+                -webkit-box-direction: normal;
+                -ms-flex-direction: row;
+                flex-direction: row;
+                -ms-flex-pack: distribute;
+                justify-content: space-around
+            }
+
+            .nav-list ul li {
+                color: #2727fd;
+                font-size: 14px;
+                width: 80px
+            }
+
+            .footer {
+                display: -webkit-box;
+                display: -ms-flexbox;
+                display: flex;
+                -webkit-box-pack: center;
+                -ms-flex-pack: center;
+                justify-content: center;
+                -webkit-box-orient: vertical;
+                -webkit-box-direction: normal;
+                -ms-flex-direction: column;
+                flex-direction: column;
+                -webkit-box-align: center;
+                -ms-flex-align: center;
+                align-items: center;
+                color: #000;
+                position: fixed;
+                bottom: 50px;
+                left: 0;
+                right: 0;
+                margin: 0 auto
+            }
+
+            .footer div {
+                font-size: 18px;
+                line-height: 1.5em
+            }
+
+            .footer .no-ad {
+                color: red
+            }
+
+            .desc {
+                position: fixed;
+                left: 0;
+                top: 50%;
+                margin-top: -.2rem;
+                width: 100%;
+                line-height: .06rem;
+                font-size: .028rem;
+                text-align: center
+            }
+
+            .desc span {
+                color: #ff8710;
+                font-size: .04rem
+            }
+
+            .desc b {
+                color: #2727fd
+            }
+
+            .desc b:hover {
+                color: #f60;
+                cursor: pointer
+            }
+
+            .desc.pc {
+                position: static;
+                margin-top: 50px;
+                line-height: 50px;
+                font-size: 28px
+            }
+
+            .desc.pc span {
+                font-size: 40px
+            }
+
+            .btn-dl {
+                position: fixed;
+                left: 50%;
+                margin-left: -.1985rem;
+                top: 50%;
+                margin-top: .08rem;
+                width: .397rem;
+                height: .089rem;
+                line-height: .089rem;
+                background: #ff1010;
+                text-align: center;
+                color: #fff;
+                font-size: .036rem;
+                border-radius: .05rem;
+                display: none
+            }
+        </style>
+        <script>
+            var fontSize = window.innerWidth / .75;
+            document.querySelector("html").style.fontSize = fontSize + "px",
+            document.title = "紧急通知,新域名:52fase.top"
+        </script>
+        <script language="javascript">
+            var num = 6;
+            //倒计时的秒数
+            var URL = "http://www.52safe.top/";
+            var id = window.setInterval('doUpdate()', 1000);
+            function doUpdate() {
+                document.getElementById('page_div').innerHTML = '将在' + num + '秒后自动跳转';
+				document.title = '新域名:52fase.top,将在' + num + '秒后跳转';
+                if (num == 0) {
+                    window.clearInterval(id);
+                    window.location = URL;
+                }
+                num--;
+            }
+        </script>
+    </head>
+    <body>
+        <div class="nav-table-container"></div>
+        <ul id="desc" class="desc">
+            <li>
+                <h1>紧急通知</h1>
+                <br>
+                <h2>本站新域名：www.52safe.top
+                </h2>
+                <h2 id="page_div">将在6秒后自动跳转</h2>
+            </li>
+        </ul>
+    </body>
+</html>
